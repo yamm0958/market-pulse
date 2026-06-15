@@ -144,6 +144,14 @@
   .ev .countdown.soon{color:var(--up)}
   .ev .countdown.future{color:var(--faint)}
   .ev .countdown.past{color:var(--faint)}
+  .ev .ev-time{font-family:var(--mono); font-size:11.5px; color:var(--amber-soft); margin-top:6px; display:flex; align-items:center; gap:5px}
+  .ev .ev-time svg{width:12px;height:12px;flex-shrink:0}
+  .ev-stats{display:flex; gap:16px; margin-top:8px; flex-wrap:wrap}
+  .ev-stat{font-family:var(--mono); font-size:11.5px; background:var(--bg3); border:1px solid var(--line); border-radius:7px; padding:5px 10px; line-height:1.45}
+  .ev-stat .sv{color:var(--ink); font-weight:600}
+  .ev-stat .sk{color:var(--faint); font-size:10.5px; display:block; margin-bottom:1px}
+  .ev-link{display:inline-flex; align-items:center; gap:5px; margin-top:8px; font-family:var(--mono); font-size:11px; color:var(--faint); text-decoration:none; border:1px solid var(--line); border-radius:6px; padding:4px 10px; transition:.2s}
+  .ev-link:hover{border-color:var(--amber); color:var(--amber-soft)}
 
   /* 分析 */
   .gauge-wrap{background:var(--bg2); border:1px solid var(--line); border-radius:16px; padding:26px 24px; margin-bottom:26px}
@@ -292,51 +300,159 @@
 <script>
 // ===== 離線備援快照 =====
 const SNAP_TW=[
-  {title:"台股大漲逾千點 加權指數創歷史新高",source:"中央社",time:"6/10",sentiment:"up",summary:"今日加權指數收44,704點、大漲2.76%，三大法人合計買超逾500億元。",url:"https://www.cmoney.tw/forum/market",tickers:["加權指數"]},
-  {title:"台積電ADR強勢 外資連續買超",source:"聯合報",time:"6/10",sentiment:"up",summary:"外資持續布局台積電，台股半導體族群全面走強。",url:"https://udn.com/news/story/7253/9535785",tickers:["2330"]},
-  {title:"建材營造族群爆量突破 冠德、海悅漲停",source:"工商時報",time:"6/10",sentiment:"up",summary:"建材營造族群今日多檔漲停，成交量爆增，市場關注度大升。",url:"https://www.ctee.com.tw/",tickers:["2520","2348"]},
-  {title:"VCP型態突破訊號增加 台股動能強勁",source:"MoneyDJ",time:"6/10",sentiment:"up",summary:"今日多檔個股出現VCP波動收縮突破，技術面轉強。",url:"https://www.moneydj.com/",tickers:["1442","2442"]},
-  {title:"航運股遠雄港量增價漲 法人買超",source:"經濟日報",time:"6/9",sentiment:"up",summary:"航運族群受惠運價回升，遠雄港表現突出。",url:"https://money.udn.com/",tickers:["5607"]},
+  {title:"台股持續走強 加權指數站穩44,000點關卡",source:"中央社",time:"6/15",sentiment:"up",summary:"今日台股震盪偏強，半導體族群引領指數維持高檔，三大法人偏多操作。",url:"https://www.cmoney.tw/forum/market",tickers:["加權指數"]},
+  {title:"台積電外資持續買超 CoWoS封裝需求強勁",source:"經濟日報",time:"6/15",sentiment:"up",summary:"外資連續布局台積電，先進封裝CoWoS供不應求，AI伺服器需求持續強勁。",url:"https://money.udn.com/",tickers:["2330"]},
+  {title:"聯發科天璣新平台發表 股價創波段新高",source:"工商時報",time:"6/14",sentiment:"up",summary:"聯發科發表新一代行動晶片，AI效能提升，市場反應正面。",url:"https://www.ctee.com.tw/",tickers:["2454"]},
+  {title:"廣達、英業達 AI伺服器出貨加速 法人調升目標價",source:"MoneyDJ",time:"6/13",sentiment:"up",summary:"AI伺服器ODM廠商訂單能見度高，廣達、英業達等法人紛紛調升目標價。",url:"https://www.moneydj.com/",tickers:["2382"]},
+  {title:"台幣升值壓力 出口商拋匯積極",source:"聯合報",time:"6/13",sentiment:"neutral",summary:"新台幣匯率升破30.5關卡，出口商拋匯壓力增加，外匯市場交投活絡。",url:"https://udn.com/",tickers:[]},
 ];
 const SNAP_US=[
-  {title:"那斯達克強彈 AI股全面走揚",source:"CNBC",time:"6/10",sentiment:"up",summary:"科技股受買盤回籠推升，輝達、AMD等AI相關股大漲。",url:"https://www.cnbc.com/",tickers:["IXIC","NVDA","AMD"]},
-  {title:"S&P 500創近期新高 市場風險偏好回升",source:"Bloomberg",time:"6/10",sentiment:"up",summary:"美股三大指數同步走強，投資人信心回升。",url:"https://www.bloomberg.com/",tickers:["GSPC"]},
-  {title:"Fed官員釋出鴿派訊號 降息預期升溫",source:"Reuters",time:"6/10",sentiment:"up",summary:"聯準會官員暗示通膨降溫，市場下修升息預期。",url:"https://www.reuters.com/",tickers:[]},
-  {title:"輝達GTC大會展示新一代AI晶片",source:"The Verge",time:"6/9",sentiment:"up",summary:"黃仁勳發表新晶片架構，激勵半導體供應鏈走強。",url:"https://www.theverge.com/",tickers:["NVDA"]},
-  {title:"蘋果WWDC登場 AI功能大幅升級",source:"9to5Mac",time:"6/9",sentiment:"up",summary:"蘋果發表新AI功能，市場預期消費電子需求回升。",url:"https://9to5mac.com/",tickers:["AAPL"]},
+  {title:"輝達 NVDA 股價再創歷史新高 市值突破 4 兆美元",source:"CNBC",time:"6/15",sentiment:"up",summary:"輝達股價再度刷新高點，AI晶片需求強勁，市值突破4兆美元大關。",url:"https://www.cnbc.com/",tickers:["NVDA"]},
+  {title:"美股三大指數收高 Fed 降息預期支撐市場",source:"Reuters",time:"6/14",sentiment:"up",summary:"聯準會官員暗示通膨降溫進展順利，市場對年內降息預期升溫，三大指數同步走強。",url:"https://www.reuters.com/",tickers:["GSPC","IXIC"]},
+  {title:"蘋果 WWDC 發表 AI 新功能 Apple Intelligence 全面更新",source:"Bloomberg",time:"6/13",sentiment:"up",summary:"蘋果發表下一代 Apple Intelligence 功能，整合第三方 AI 模型，消費電子升級週期受關注。",url:"https://www.bloomberg.com/",tickers:["AAPL"]},
+  {title:"AMD MI400 系列晶片迎戰輝達 B300 競爭格局白熱化",source:"The Verge",time:"6/12",sentiment:"up",summary:"AMD 宣布新一代 AI 加速器路線圖，分析師看好 2026 年下半市占提升空間。",url:"https://www.theverge.com/",tickers:["AMD"]},
+  {title:"美國 5 月 CPI 數據低於預期 通膨降溫趨勢明確",source:"WSJ",time:"6/11",sentiment:"up",summary:"5 月 CPI 年增 2.6%，核心 CPI 2.8%，均低於市場預期，Fed 9 月降息機率上升。",url:"https://www.wsj.com/",tickers:[]},
 ];
 
 // ===== 行事曆事件（含台股與美股） =====
+// 欄位說明：date/name/type/region/importance/note/time/prev/forecast/link
 const CAL_EVENTS=[
-  // 六月
-  {date:"2026-06-11",name:"美國 5 月 CPI 公布",type:"經濟數據",region:"美股",importance:3,note:"通膨核心數據，直接牽動 Fed 決策方向（以 BLS 官方公告為準）"},
-  {date:"2026-06-13",name:"台灣 5 月進出口貿易統計",type:"經濟數據",region:"台股",importance:2,note:"財政部公布，觀察半導體出口動能是否持續"},
-  {date:"2026-06-16",name:"FOMC 利率會議（第一天）",type:"央行",region:"全球",importance:3,note:"為期兩天的利率會議"},
-  {date:"2026-06-17",name:"FOMC 利率決策 + 鮑爾記者會",type:"央行",region:"全球",importance:3,note:"公布利率決策、點陣圖與最新經濟展望(SEP)，全球最重要的利率事件"},
-  {date:"2026-06-19",name:"Juneteenth 美股休市",type:"其他",region:"美股",importance:1,note:"美國股市當日全日休市"},
-  {date:"2026-06-19",name:"台灣央行理監事聯席會議",type:"央行",region:"台股",importance:3,note:"每季一次利率決策，同步公布最新經濟預測"},
-  {date:"2026-06-20",name:"美國 5 月零售銷售",type:"經濟數據",region:"美股",importance:2,note:"反映消費動能，影響對景氣軟著陸的判斷"},
-  {date:"2026-06-24",name:"輝達(NVDA)年度股東會",type:"股東會",region:"美股",importance:2,note:"線上召開，改選董事、薪酬投票，黃仁勳可能釋出最新展望"},
-  {date:"2026-06-26",name:"美國 Q1 GDP 終值",type:"經濟數據",region:"美股",importance:2,note:"第一季 GDP 最終修正值"},
-  {date:"2026-06-27",name:"美國 5 月 PCE 物價指數",type:"經濟數據",region:"美股",importance:3,note:"Fed 最偏好的通膨指標，對利率路徑影響重大"},
-  {date:"2026-06-30",name:"台股半年結算日",type:"其他",region:"台股",importance:2,note:"法人作帳效應明顯，留意尾盤波動"},
-  // 七月
-  {date:"2026-07-01",name:"美國 6 月 ISM 製造業 PMI",type:"經濟數據",region:"美股",importance:2,note:"製造業景氣先行指標"},
-  {date:"2026-07-02",name:"美國 6 月非農就業報告",type:"經濟數據",region:"美股",importance:3,note:"就業市場強弱直接影響 Fed 降息時間表"},
-  {date:"2026-07-04",name:"美國獨立紀念日 美股休市",type:"其他",region:"美股",importance:1,note:"美國股市全日休市"},
-  {date:"2026-07-10",name:"美國 6 月 CPI 公布",type:"經濟數據",region:"美股",importance:3,note:"通膨月度數據，影響七月 FOMC 決策"},
-  {date:"2026-07-15",name:"台積電 Q2 法說會（預計）",type:"財報",region:"台股",importance:3,note:"全球半導體景氣風向球，魏哲家展望牽動供應鏈走勢（日期以台積電官方公告為準）"},
-  {date:"2026-07-15",name:"美國 6 月零售銷售",type:"經濟數據",region:"美股",importance:2,note:"消費動能月度數據"},
-  {date:"2026-07-22",name:"FOMC 利率會議（第一天）",type:"央行",region:"全球",importance:3,note:"七月利率決策，市場高度關注是否啟動降息"},
-  {date:"2026-07-23",name:"FOMC 利率決策 + 鮑爾記者會",type:"央行",region:"全球",importance:3,note:"七月利率決策公布"},
-  {date:"2026-07-25",name:"美國 Q2 GDP 初值",type:"經濟數據",region:"美股",importance:3,note:"第二季 GDP 初步估算，判斷景氣方向的關鍵"},
-  {date:"2026-07-28",name:"台積電、鴻海、聯發科 Q2 財報季開始",type:"財報",region:"台股",importance:2,note:"台股科技龍頭陸續公布第二季財報，留意法說會展望"},
-  // 八月
-  {date:"2026-08-01",name:"美國 7 月非農就業報告",type:"經濟數據",region:"美股",importance:3,note:"就業數據月報"},
-  {date:"2026-08-05",name:"台灣 Q2 GDP 初值",type:"經濟數據",region:"台股",importance:2,note:"主計總處公布，觀察台灣出口導向景氣"},
-  {date:"2026-08-13",name:"美國 7 月 CPI 公布",type:"經濟數據",region:"美股",importance:3,note:"通膨數據"},
-  {date:"2026-08-21",name:"輝達 Q2 財報（預計）",type:"財報",region:"美股",importance:3,note:"AI 景氣的最重要指標，影響全球半導體族群（日期以輝達官方公告為準）"},
-  {date:"2026-08-27",name:"Jackson Hole 全球央行年會",type:"央行",region:"全球",importance:3,note:"鮑爾演講通常暗示 Fed 下半年政策方向，歷史上曾多次引發大波動"},
+  // ── 六月 ──
+  {date:"2026-06-11",name:"美國 5 月 CPI 公布",type:"經濟數據",region:"美股",importance:3,
+   time:"20:30 台灣時間（08:30 ET）",prev:"年增 2.7%，核心 2.9%",forecast:"年增 2.6%，核心 2.8%",
+   note:"通膽核心數據，低於預期通常推升股市。BLS 每月第二個或第三個週三公布。",
+   link:"https://www.bls.gov/cpi/"},
+  {date:"2026-06-13",name:"台灣 5 月進出口貿易統計",type:"經濟數據",region:"台股",importance:2,
+   time:"16:00（財政部記者會）",prev:"出口年增 22.3%",forecast:"出口年增 18～20%",
+   note:"半導體出口佔整體比重超過 40%，直接反映 AI 供應鏈需求強弱。",
+   link:"https://www.mof.gov.tw/"},
+  {date:"2026-06-16",name:"FOMC 利率會議（第一天）",type:"央行",region:"全球",importance:3,
+   time:"整日",prev:"目前利率 4.25～4.50%",forecast:"預期維持不變",
+   note:"為期兩天的閉門會議，聚焦最新 PCE、就業數據評估。",
+   link:"https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"},
+  {date:"2026-06-17",name:"FOMC 利率決策 + 鮑爾記者會",type:"央行",region:"全球",importance:3,
+   time:"02:00 台灣時間（14:00 ET）發聲明；02:30 記者會",prev:"維持 4.25～4.50%（2025年12月起）",forecast:"市場預期維持不變，關注點陣圖降息次數",
+   note:"同步公布點陣圖（dot plot）與最新經濟展望 SEP。全年最重要利率事件之一。",
+   link:"https://www.federalreserve.gov/"},
+  {date:"2026-06-19",name:"Juneteenth 美股全日休市",type:"其他",region:"美股",importance:1,
+   time:"全日休市",prev:"—",forecast:"—",
+   note:"美國聯邦假日，NYSE 及 NASDAQ 全日關閉，台股正常交易。",
+   link:"https://www.nyse.com/markets/hours-calendars"},
+  {date:"2026-06-19",name:"台灣央行理監事聯席會議",type:"央行",region:"台股",importance:3,
+   time:"15:30（央行記者會）",prev:"維持 2.00%（連五次不變）",forecast:"預期維持 2.00%，關注升值壓力說明",
+   note:"每季一次利率決策，同步公布最新 GDP 及 CPI 預測。台幣升值壓力為本次討論焦點。",
+   link:"https://www.cbc.gov.tw/"},
+  {date:"2026-06-20",name:"美國 5 月零售銷售",type:"經濟數據",region:"美股",importance:2,
+   time:"20:30 台灣時間",prev:"月增 +0.1%",forecast:"月增 +0.3%",
+   note:"反映美國消費者支出動能，影響市場對景氣軟著陸的判斷。",
+   link:"https://www.census.gov/retail/"},
+  {date:"2026-06-24",name:"輝達（NVDA）年度股東會",type:"股東會",region:"美股",importance:2,
+   time:"線上，約 22:00 台灣時間（10:00 PT）",prev:"2025 年股東會通過全部議案",forecast:"改選董事、薪酬方案投票，黃仁勳或釋出下半年展望",
+   note:"議程含董事改選、薪酬投票，黃仁勳 Q&A 為市場焦點。",
+   link:"https://investor.nvidia.com/"},
+  {date:"2026-06-26",name:"美國 Q1 GDP 終值",type:"經濟數據",region:"美股",importance:2,
+   time:"20:30 台灣時間",prev:"Q1 初值年化 +1.2%",forecast:"終值年化 +1.3%",
+   note:"GDP 第三次修正，為最終確定數值，通常與二次修正差距不大。",
+   link:"https://www.bea.gov/"},
+  {date:"2026-06-27",name:"美國 5 月 PCE 物價指數",type:"經濟數據",region:"美股",importance:3,
+   time:"20:30 台灣時間",prev:"整體年增 2.2%，核心 2.5%",forecast:"整體年增 2.1%，核心 2.4%",
+   note:"聯準會最偏好的通膨衡量指標。若核心 PCE 持續降溫，9 月降息概率大增。",
+   link:"https://www.bea.gov/data/personal-consumption-expenditures-price-index"},
+  {date:"2026-06-30",name:"台股半年結算日（法人作帳日）",type:"其他",region:"台股",importance:2,
+   time:"尾盤 13:25～13:30 留意異常波動",prev:"2025 下半年指數上漲 18%",forecast:"法人作帳效應，強勢股可能拉尾盤，弱勢股易遭棄守",
+   note:"半年度投資組合結算日，三大法人買賣動作較平日劇烈，散戶留意尾盤流動性風險。",
+   link:"https://www.twse.com.tw/"},
+  // ── 七月 ──
+  {date:"2026-07-01",name:"美國 6 月 ISM 製造業 PMI",type:"經濟數據",region:"美股",importance:2,
+   time:"22:00 台灣時間",prev:"49.3（收縮區間）",forecast:"49.8",
+   note:"製造業景氣先行指標，50 以上為擴張。連續萎縮可能引發衰退疑慮。",
+   link:"https://www.ismworld.org/"},
+  {date:"2026-07-02",name:"美國 6 月非農就業報告（NFP）",type:"經濟數據",region:"美股",importance:3,
+   time:"20:30 台灣時間",prev:"新增 18.0 萬人；失業率 4.1%",forecast:"新增 16.5 萬人；失業率 4.1%",
+   note:"就業市場強弱直接影響 Fed 降息時間表。當日美股成交量通常放大，台股隔日開盤留意跳空。",
+   link:"https://www.bls.gov/ces/"},
+  {date:"2026-07-04",name:"美國獨立紀念日 美股全日休市",type:"其他",region:"美股",importance:1,
+   time:"全日休市",prev:"—",forecast:"—",
+   note:"美國國定假日，NYSE 及 NASDAQ 全日關閉，台股正常交易。",
+   link:"https://www.nyse.com/markets/hours-calendars"},
+  {date:"2026-07-10",name:"美國 6 月 CPI 公布",type:"經濟數據",region:"美股",importance:3,
+   time:"20:30 台灣時間",prev:"年增 2.6%，核心 2.8%",forecast:"年增 2.5%，核心 2.7%",
+   note:"七月 FOMC 決策前最後一份 CPI，若大幅低於預期可能引發降息交易。",
+   link:"https://www.bls.gov/cpi/"},
+  {date:"2026-07-15",name:"台積電 Q2 法說會（預計）",type:"財報",region:"台股",importance:3,
+   time:"台灣時間約 14:00（法說）；英文同步 17:00",prev:"Q1 毛利率 58.8%；AI 相關業務成長 3 倍以上",forecast:"Q2 毛利率預計 57.5～59.5%",
+   note:"全球半導體景氣風向球。魏哲家對 CoWoS 產能與 N2 良率的說法將牽動整個供應鏈。日期以台積電官方公告為準。",
+   link:"https://investor.tsmc.com/"},
+  {date:"2026-07-15",name:"美國 6 月零售銷售",type:"經濟數據",region:"美股",importance:2,
+   time:"20:30 台灣時間",prev:"月增 +0.3%",forecast:"月增 +0.2%",
+   note:"反映美國夏季消費動能，與 CPI 同日公布，市場波動可能放大。",
+   link:"https://www.census.gov/retail/"},
+  {date:"2026-07-22",name:"FOMC 利率會議（第一天）",type:"央行",region:"全球",importance:3,
+   time:"整日",prev:"4.25～4.50%",forecast:"市場目前預期維持，但本次為降息臨界點",
+   note:"市場高度關注是否於本次或 9 月啟動降息，CME FedWatch 追蹤最新概率。",
+   link:"https://www.federalreserve.gov/"},
+  {date:"2026-07-23",name:"FOMC 利率決策 + 鮑爾記者會",type:"央行",region:"全球",importance:3,
+   time:"02:00 台灣時間（14:00 ET）發聲明；02:30 記者會",prev:"4.25～4.50%",forecast:"各方分歧：約 30% 機率降息 1 碼",
+   note:"若降息，為本輪寬鬆週期首降，歷史意義重大。若維持，鮑爾記者會措辭暗示將是市場焦點。",
+   link:"https://www.federalreserve.gov/"},
+  {date:"2026-07-25",name:"美國 Q2 GDP 初值",type:"經濟數據",region:"美股",importance:3,
+   time:"20:30 台灣時間",prev:"Q1 終值 年化 +1.3%",forecast:"Q2 初值 年化 +1.8～2.0%",
+   note:"第二季 GDP 初步估算，判斷是否真正軟著陸的關鍵數據。",
+   link:"https://www.bea.gov/"},
+  {date:"2026-07-28",name:"台積電、鴻海、聯發科 Q2 財報季開始",type:"財報",region:"台股",importance:2,
+   time:"各公司公告時間不同，法說多在 14:00",prev:"Q1 三家合計獲利年增 45%",forecast:"觀察 AI 伺服器及智慧型手機需求能見度",
+   note:"台股科技龍頭陸續公布第二季財報，法說展望通常左右後續一至兩週走勢。",
+   link:"https://mops.twse.com.tw/"},
+  // ── 八月 ──
+  {date:"2026-08-01",name:"美國 7 月非農就業報告（NFP）",type:"經濟數據",region:"美股",importance:3,
+   time:"20:30 台灣時間",prev:"新增 16.5 萬人；失業率 4.1%",forecast:"新增 15.5 萬人；失業率 4.1%",
+   note:"九月 FOMC 前關鍵數據，就業若明顯走弱，降息幾乎確定。",
+   link:"https://www.bls.gov/ces/"},
+  {date:"2026-08-05",name:"台灣 Q2 GDP 初值",type:"經濟數據",region:"台股",importance:2,
+   time:"16:00（主計總處發布）",prev:"Q1 GDP 年增 5.1%（受惠 AI 出口）",forecast:"Q2 年增 4.5～5.0%",
+   note:"主計總處公布，出口導向景氣晴雨表。近幾季台灣 GDP 持續受 AI 伺服器出口帶動。",
+   link:"https://www.stat.gov.tw/"},
+  {date:"2026-08-13",name:"美國 7 月 CPI 公布",type:"經濟數據",region:"美股",importance:3,
+   time:"20:30 台灣時間",prev:"年增 2.5%，核心 2.7%",forecast:"年增 2.4%，核心 2.6%",
+   note:"九月 FOMC 前最後一份 CPI，數據走向將基本確定降息路徑。",
+   link:"https://www.bls.gov/cpi/"},
+  {date:"2026-08-21",name:"輝達（NVDA）Q2 財報（預計）",type:"財報",region:"美股",importance:3,
+   time:"盤後約 05:30 台灣時間（17:30 ET）",prev:"Q1 營收 $44.1B；EPS $0.89；毛利率 78.4%",forecast:"Q2 營收市場預期 $48～50B",
+   note:"AI 景氣最重要指標，黃仁勳資料中心業務展望牽動全球半導體股。日期以輝達官方公告為準。",
+   link:"https://investor.nvidia.com/"},
+  {date:"2026-08-27",name:"Jackson Hole 全球央行年會",type:"央行",region:"全球",importance:3,
+   time:"鮑爾演講時間約 22:00 台灣時間（10:00 MT）",prev:"2025 年鮑爾在此宣示「時機已到」，啟動降息預期",forecast:"市場預期本次將提供 Q4 政策方向訊號",
+   note:"每年 8 月懷俄明州舉辦，全球主要央行總裁出席。鮑爾演講歷史上曾多次引發重大市場波動。",
+   link:"https://www.kansascityfed.org/jackson-hole/"},
+  // ── 九月 ──
+  {date:"2026-09-01",name:"美國 8 月 ISM 製造業 PMI",type:"經濟數據",region:"美股",importance:2,
+   time:"22:00 台灣時間",prev:"預計 8 月公布",forecast:"—",
+   note:"製造業景氣先行指標，觀察景氣是否轉折。",
+   link:"https://www.ismworld.org/"},
+  {date:"2026-09-05",name:"美國 8 月非農就業報告（NFP）",type:"經濟數據",region:"美股",importance:3,
+   time:"20:30 台灣時間",prev:"預計 8 月數據",forecast:"—",
+   note:"九月 FOMC 前最後一份非農，決定是否正式啟動本輪降息。",
+   link:"https://www.bls.gov/ces/"},
+  {date:"2026-09-10",name:"美國 8 月 CPI 公布",type:"經濟數據",region:"美股",importance:3,
+   time:"20:30 台灣時間",prev:"預計 8 月通膨數據",forecast:"—",
+   note:"九月 FOMC 前最後一份 CPI，與非農同為降息決策依據。",
+   link:"https://www.bls.gov/cpi/"},
+  {date:"2026-09-16",name:"FOMC 利率會議（第一天）",type:"央行",region:"全球",importance:3,
+   time:"整日",prev:"4.25～4.50%（或 7 月已降）",forecast:"降息 1 碼機率高，視 7 月決策結果",
+   note:"年內最受關注的其中一次 FOMC，可能是本輪降息週期正式啟動的時間點。",
+   link:"https://www.federalreserve.gov/"},
+  {date:"2026-09-17",name:"FOMC 利率決策 + 鮑爾記者會 + 點陣圖",type:"央行",region:"全球",importance:3,
+   time:"02:00 台灣時間（14:00 ET）；記者會 02:30",prev:"待觀察",forecast:"含點陣圖與 SEP，預期下調 2026～2027 年利率預測",
+   note:"本次同步公布點陣圖（dot plot），將揭示委員對 2026 年底利率終點的最新看法。",
+   link:"https://www.federalreserve.gov/"},
+  {date:"2026-09-19",name:"台灣央行理監事聯席會議（Q3）",type:"央行",region:"台股",importance:3,
+   time:"15:30（央行記者會）",prev:"維持 2.00%",forecast:"多數預期維持不變",
+   note:"第三季利率決策，若台幣持續強升，可能對外匯市場操作發表說明。",
+   link:"https://www.cbc.gov.tw/"},
+  {date:"2026-09-26",name:"美國 8 月 PCE 物價指數",type:"經濟數據",region:"美股",importance:3,
+   time:"20:30 台灣時間",prev:"整體年增 2.1%，核心 2.4%",forecast:"—",
+   note:"Fed 最偏好的通膨指標，FOMC 決策後公布，驗證路徑是否如預期降溫。",
+   link:"https://www.bea.gov/"},
 ];
 
 // ===== 工具 =====
@@ -380,6 +496,8 @@ function skeleton(n){let h='';for(let i=0;i<n;i++)h+=`<div class="skel"><div cla
 const PROXIES=[
   u=>`https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`,
   u=>`https://corsproxy.io/?url=${encodeURIComponent(u)}`,
+  u=>`https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(u)}`,
+  u=>`https://thingproxy.freeboard.io/fetch/${encodeURIComponent(u)}`,
 ];
 function gnews(q){return `https://news.google.com/rss/search?q=${encodeURIComponent(q)}&hl=zh-TW&gl=TW&ceid=TW:zh-Hant`;}
 async function fetchText(url){
@@ -561,10 +679,23 @@ function renderCal(){
       const c=CAT[e.type]||'neutral'; const imp=Math.max(1,Math.min(3,e.importance||1));
       let dots='';for(let i=1;i<=3;i++)dots+=`<i class="${i<=imp?'f':''}"></i>`;
       const cd=countdownText(date);
+      const impLabel=['','低','中','高'][imp]||'';
+      const timeHtml=e.time?`<div class="ev-time"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>${esc(e.time)}</div>`:'';
+      let statsHtml='';
+      if(e.prev||e.forecast){
+        statsHtml='<div class="ev-stats">';
+        if(e.prev) statsHtml+=`<div class="ev-stat"><span class="sk">前次值</span><span class="sv">${esc(e.prev)}</span></div>`;
+        if(e.forecast) statsHtml+=`<div class="ev-stat"><span class="sk">市場預期</span><span class="sv">${esc(e.forecast)}</span></div>`;
+        statsHtml+='</div>';
+      }
+      const linkHtml=e.link?`<a class="ev-link" href="${esc(e.link)}" target="_blank" rel="noopener"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>官方來源</a>`:'';
       h+=`<div class="ev ${c}${isToday?' today-ev':''}"><div class="bar"></div><div class="body">
-        <div class="row1"><span class="cat ${c}">${esc(e.type)}</span><span class="rflag">${esc(e.region||'')}</span><span class="imp">${dots}</span></div>
+        <div class="row1"><span class="cat ${c}">${esc(e.type)}</span><span class="rflag">${esc(e.region||'')}</span><span class="rflag" title="重要性">${impLabel}</span><span class="imp">${dots}</span></div>
         <div class="name">${esc(e.name)}</div>
         ${e.note?`<div class="note">${esc(e.note)}</div>`:''}
+        ${timeHtml}
+        ${statsHtml}
+        ${linkHtml}
         <div class="countdown ${cd.cls}">${cd.text}</div>
       </div></div>`;
     });
@@ -778,6 +909,11 @@ document.getElementById('tw-list').innerHTML=SNAP_TW.map(cardHTML).join('');
 document.getElementById('us-list').innerHTML=SNAP_US.map(cardHTML).join('');
 buildDigest(); renderCal(); buildAnalysis();
 loadDash();
+
+// 每 10 分鐘自動重新整理
+setInterval(()=>{ if(!document.hidden) loadDash(); }, 10*60*1000);
+// 頁面重新顯示時（從其他分頁切回）也刷新
+document.addEventListener('visibilitychange',()=>{ if(!document.hidden) loadDash(); });
 </script>
 </body>
 </html>
