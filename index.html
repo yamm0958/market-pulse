@@ -105,6 +105,56 @@
   .dbody h4 a{color:var(--ink); text-decoration:none} .dbody h4 a:hover{color:var(--amber-soft)}
   .dbody p{font-size:13px; color:var(--faint); font-family:var(--mono); letter-spacing:.03em}
 
+  /* 指數看板 */
+  .ticker{display:grid; grid-template-columns:repeat(5,1fr); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:14px; overflow:hidden; margin-top:18px}
+  @media(max-width:760px){.ticker{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:420px){.ticker{grid-template-columns:1fr}}
+  .tk{background:var(--bg2); padding:11px 14px; display:flex; flex-direction:column; gap:2px; transition:.2s}
+  .tk:hover{background:var(--bg3)}
+  .tk .tknm{font-family:var(--mono); font-size:10.5px; color:var(--dim); letter-spacing:.04em; display:flex; align-items:center; gap:6px; flex-wrap:wrap}
+  .tk .tkst{font-family:var(--mono); font-size:8.5px; padding:1px 5px; border-radius:4px; background:var(--bg3); color:var(--faint); letter-spacing:.04em}
+  .tk .tkst.pre{background:rgba(107,168,216,.16); color:#9cc5e8}
+  .tk .tkst.post{background:rgba(232,163,61,.16); color:var(--amber-soft)}
+  .tk .tkst.open{background:rgba(92,201,138,.16); color:var(--up)}
+  .tk .tkpx{font-family:var(--mono); font-size:18px; font-weight:600; letter-spacing:-.01em}
+  .tk .tkch{font-family:var(--mono); font-size:11.5px; font-weight:500}
+  .tk.up .tkpx,.tk.up .tkch{color:var(--up)} .tk.down .tkpx,.tk.down .tkch{color:var(--down)} .tk.flat .tkpx{color:var(--ink)} .tk.flat .tkch{color:var(--dim)}
+  .tk .tkextra{font-family:var(--mono); font-size:10px; color:var(--faint); margin-top:1px}
+
+  /* 事件提醒橫幅 */
+  .evbanner{display:flex; align-items:center; gap:13px; background:linear-gradient(100deg,rgba(232,163,61,.16),rgba(232,163,61,.03)); border:1px solid rgba(232,163,61,.32); border-radius:12px; padding:12px 16px; margin-top:16px}
+  .evbanner .eb-ico{font-size:17px}
+  .evbanner .eb-body{flex:1; min-width:0}
+  .evbanner .eb-t{font-family:var(--sans); font-weight:600; font-size:14px; color:var(--amber-soft)}
+  .evbanner .eb-s{font-family:var(--mono); font-size:11px; color:var(--dim); margin-top:2px}
+  .evbanner .eb-go{font-family:var(--mono); font-size:11px; color:var(--amber-soft); cursor:pointer; border:1px solid rgba(232,163,61,.4); border-radius:999px; padding:5px 12px; white-space:nowrap}
+  .evbanner .eb-go:hover{background:rgba(232,163,61,.16)}
+
+  /* 我的關注 */
+  .watch{background:var(--bg2); border:1px solid var(--line); border-radius:14px; padding:16px 18px; margin-bottom:18px}
+  .watch .wh{display:flex; align-items:baseline; justify-content:space-between; margin-bottom:12px; gap:10px}
+  .watch .wh h4{font-family:var(--display); font-weight:600; font-size:16px}
+  .watch .wh .whint{font-family:var(--mono); font-size:10.5px; color:var(--faint)}
+  .watch .wadd{display:flex; gap:8px; margin-bottom:12px}
+  .watch .wadd input{flex:1; background:var(--bg3); border:1px solid var(--line2); border-radius:9px; padding:9px 12px; color:var(--ink); font-family:var(--sans); font-size:13.5px; outline:none; transition:.2s}
+  .watch .wadd input:focus{border-color:var(--amber)}
+  .watch .wadd button{background:var(--amber); color:var(--bg); border:none; border-radius:9px; padding:0 16px; font-family:var(--sans); font-weight:600; font-size:13px; cursor:pointer; transition:.2s}
+  .watch .wadd button:hover{background:var(--amber-soft)}
+  .watchlist{display:flex; gap:8px; flex-wrap:wrap}
+  .wchip{display:inline-flex; align-items:center; gap:6px; font-family:var(--mono); font-size:12px; color:var(--amber-soft); background:var(--bg3); border:1px solid var(--line); padding:6px 8px 6px 13px; border-radius:999px; cursor:pointer; transition:.2s}
+  .wchip:hover{border-color:var(--amber)}
+  .wchip .wx{font-size:13px; color:var(--faint); width:17px; height:17px; display:inline-flex; align-items:center; justify-content:center; border-radius:50%; transition:.15s}
+  .wchip .wx:hover{background:var(--down); color:#fff}
+  .wempty{font-family:var(--mono); font-size:12px; color:var(--faint)}
+
+  /* 恐懼貪婪指數 */
+  .fg{background:var(--bg2); border:1px solid var(--line); border-radius:16px; padding:22px 24px 20px; margin-bottom:26px; text-align:center}
+  .fg-gauge{position:relative; width:260px; max-width:100%; margin:0 auto}
+  .fg-gauge svg{width:100%; height:auto; display:block}
+  .fg-val{font-family:var(--display); font-weight:900; font-size:40px; line-height:1; margin-top:-34px}
+  .fg-lab{font-family:var(--mono); font-size:13px; letter-spacing:.1em; margin-top:5px; font-weight:600}
+  .fg-sub{font-family:var(--mono); font-size:11px; color:var(--faint); margin-top:12px; line-height:1.5}
+
   /* 行事曆 */
   .cal-toolbar{display:flex; gap:12px; align-items:center; margin-bottom:20px; flex-wrap:wrap}
   .filters{display:flex; gap:8px; flex-wrap:wrap}
@@ -242,6 +292,9 @@
     </nav>
   </header>
 
+  <div id="ticker" class="ticker"></div>
+  <div id="ev-banner"></div>
+
   <main>
     <section class="panel on" id="dash">
       <div class="secrow">
@@ -262,6 +315,7 @@
         <input id="q" type="text" placeholder="輸入股票名稱、代號或主題，例如：台積電、輝達、半導體、Fed 利率…">
         <button class="btn" id="go">搜尋</button>
       </div>
+      <div id="watch-box"></div>
       <div class="hints" id="hints"></div>
       <div id="search-results"></div>
     </section>
@@ -275,7 +329,8 @@
       <div class="sectitle" style="margin-bottom:18px">市場行事曆<span class="tag">UPCOMING</span></div>
       <div class="cal-toolbar">
         <div class="filters" id="cal-filters"></div>
-        <button class="cal-toggle" id="cal-toggle">顯示過去事件</button>
+        <button class="cal-toggle" id="cal-export">⤓ 匯出 .ics</button>
+        <button class="cal-toggle" id="cal-toggle" style="margin-left:0">顯示過去事件</button>
       </div>
       <div id="cal-out"></div>
     </section>
@@ -545,6 +600,181 @@ function parseRSS(text){
   return out;
 }
 
+// ===== 指數行情（Yahoo Finance）=====
+const INDICES=[
+  {sym:'^TWII', nm:'加權指數', dp:0, snap:{price:23200,prev:23050}},
+  {sym:'^GSPC', nm:'S&P 500', dp:0, snap:{price:6000,prev:5975}},
+  {sym:'^IXIC', nm:'NASDAQ',  dp:0, snap:{price:19550,prev:19420}},
+  {sym:'TWD=X', nm:'美元/台幣', dp:3, snap:{price:30.55,prev:30.62}},
+  {sym:'^VIX',  nm:'VIX 波動率', dp:2, snap:{price:14.2,prev:14.8}},
+];
+let liveIndices=null;
+async function fetchQuote(sym){
+  const url=`https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(sym)}?range=1d&interval=5m&includePrePost=true`;
+  const j=JSON.parse(await fetchText(url));
+  const m=j.chart.result[0].meta;
+  const prev=(m.chartPreviousClose!=null?m.chartPreviousClose:m.previousClose);
+  return {price:m.regularMarketPrice, prev, state:m.marketState,
+          pre:m.preMarketPrice, post:m.postMarketPrice};
+}
+async function loadIndices(){
+  const results=await Promise.all(INDICES.map(async ix=>{
+    try{
+      const q=await fetchQuote(ix.sym);
+      if(q.price==null||q.prev==null) throw new Error('no data');
+      return {...ix, ...q, live:true};
+    }catch(e){
+      return {...ix, price:ix.snap.price, prev:ix.snap.prev, live:false};
+    }
+  }));
+  liveIndices=results;
+  renderTicker(results);
+  renderBanner();
+  if(document.getElementById('analysis-out').innerHTML) buildAnalysis();
+}
+function stateBadge(st){
+  if(st==='PRE'||st==='PREPRE') return {cls:'pre',t:'盤前'};
+  if(st==='REGULAR') return {cls:'open',t:'盤中'};
+  if(st==='POST'||st==='POSTPOST') return {cls:'post',t:'盤後'};
+  if(st==='CLOSED') return {cls:'',t:'收盤'};
+  return null;
+}
+function renderTicker(list){
+  const el=document.getElementById('ticker');
+  el.innerHTML=list.map(ix=>{
+    const dp=ix.dp!=null?ix.dp:2;
+    const ch=ix.price-ix.prev, pct=ix.prev?ch/ix.prev*100:0;
+    const cls=ch>0?'up':ch<0?'down':'flat';
+    const sign=ch>0?'+':'';
+    const arrow=ch>0?'▲':ch<0?'▼':'■';
+    const px=ix.price.toLocaleString('en-US',{minimumFractionDigits:dp,maximumFractionDigits:dp});
+    const b=ix.live?stateBadge(ix.state):null;
+    const badge=b?`<span class="tkst ${b.cls}">${b.t}</span>`:(ix.live?'':'<span class="tkst">快照</span>');
+    let extra='';
+    const isPre=(ix.state==='PRE'||ix.state==='PREPRE'), isPost=(ix.state==='POST'||ix.state==='POSTPOST');
+    const pp=isPre?ix.pre:isPost?ix.post:null;
+    if(ix.live && pp!=null){
+      const d=pp-ix.price, s=d>=0?'+':'';
+      extra=`<span class="tkextra">${isPre?'盤前':'盤後'} ${pp.toLocaleString('en-US',{minimumFractionDigits:dp,maximumFractionDigits:dp})}（${s}${d.toFixed(dp)}）</span>`;
+    }
+    return `<div class="tk ${cls}">
+      <div class="tknm">${esc(ix.nm)}${badge}</div>
+      <div class="tkpx">${px}</div>
+      <div class="tkch">${arrow} ${sign}${ch.toFixed(dp)}（${sign}${pct.toFixed(2)}%）</div>
+      ${extra}
+    </div>`;
+  }).join('');
+}
+
+// ===== 事件提醒橫幅 =====
+function renderBanner(){
+  const el=document.getElementById('ev-banner');
+  const soon=CAL_EVENTS.filter(e=>{
+    const cd=countdownText(e.date);
+    return e.importance>=3 && (cd.cls==='today'||cd.cls==='soon');
+  }).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,1);
+  if(!soon.length){ el.innerHTML=''; return; }
+  const e=soon[0], cd=countdownText(e.date);
+  const head=cd.cls==='today'?'今日重要事件':cd.text;
+  el.innerHTML=`<div class="evbanner">
+    <span class="eb-ico">🔔</span>
+    <div class="eb-body">
+      <div class="eb-t">${esc(head)}｜${esc(e.name)}</div>
+      <div class="eb-s">${esc(e.region||'')}${e.time?(' · '+esc(e.time)):''}${e.forecast?(' · 預期 '+esc(e.forecast)):''}</div>
+    </div>
+    <span class="eb-go" id="eb-go">查看行事曆 →</span>
+  </div>`;
+  const go=document.getElementById('eb-go');
+  if(go) go.onclick=()=>{ const t=document.querySelector('.tab[data-tab="cal"]'); if(t) t.click(); };
+}
+
+// ===== 行事曆匯出（.ics）=====
+let lastCalList=null;
+function icsEsc(s){return (s||'').replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\n/g,'\\n');}
+function icsAddDay(ymd){const d=new Date(ymd+'T00:00:00'); d.setDate(d.getDate()+1); return d.toISOString().slice(0,10).replace(/-/g,'');}
+function buildICS(events){
+  const L=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//MarketPulse//ZH-TW//','CALSCALE:GREGORIAN','METHOD:PUBLISH','X-WR-CALNAME:市場脈動 行事曆'];
+  events.forEach((e,i)=>{
+    const dt=e.date.replace(/-/g,'');
+    L.push('BEGIN:VEVENT');
+    L.push('UID:mp-'+dt+'-'+i+'@marketpulse');
+    L.push('DTSTAMP:'+new Date().toISOString().replace(/[-:]/g,'').slice(0,15)+'Z');
+    L.push('DTSTART;VALUE=DATE:'+dt);
+    L.push('DTEND;VALUE=DATE:'+icsAddDay(e.date));
+    L.push('SUMMARY:'+icsEsc('['+(e.region||'')+'] '+e.name));
+    const desc=[e.note,e.time?('時間：'+e.time):'',e.prev?('前次值：'+e.prev):'',e.forecast?('市場預期：'+e.forecast):'',e.link?('來源：'+e.link):''].filter(Boolean).join('\n');
+    if(desc) L.push('DESCRIPTION:'+icsEsc(desc));
+    L.push('END:VEVENT');
+  });
+  L.push('END:VCALENDAR');
+  return L.join('\r\n');
+}
+function downloadICS(){
+  const todayStr=new Date().toISOString().slice(0,10);
+  const list=(lastCalList&&lastCalList.length)?lastCalList:CAL_EVENTS.filter(e=>e.date>=todayStr);
+  const blob=new Blob([buildICS(list)],{type:'text/calendar;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a'); a.href=url; a.download='marketpulse-calendar.ics';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+
+// ===== 我的關注（localStorage）=====
+function loadWatch(){try{return JSON.parse(localStorage.getItem('mp_watchlist')||'[]')}catch(e){return[]}}
+function saveWatch(a){try{localStorage.setItem('mp_watchlist',JSON.stringify(a))}catch(e){}}
+function renderWatch(){
+  const box=document.getElementById('watch-box');
+  const list=loadWatch();
+  box.innerHTML=`<div class="watch">
+    <div class="wh"><h4>我的關注</h4><span class="whint">點擊查詢最新消息 · 共 ${list.length} 檔</span></div>
+    <div class="wadd"><input id="watch-input" type="text" placeholder="新增關注，例如：台積電、2330、輝達"><button id="watch-add">加入</button></div>
+    <div class="watchlist">${list.length?list.map(w=>`<span class="wchip" data-w="${esc(w)}">${esc(w)}<span class="wx" data-x="${esc(w)}">×</span></span>`).join(''):'<span class="wempty">尚未加入任何關注標的</span>'}</div>
+  </div>`;
+  const inp=document.getElementById('watch-input');
+  const add=()=>{const v=inp.value.trim(); if(!v) return; const a=loadWatch(); if(!a.includes(v)){a.push(v); saveWatch(a);} renderWatch();};
+  document.getElementById('watch-add').onclick=add;
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter')add();});
+  box.querySelectorAll('.wchip').forEach(c=>c.onclick=ev=>{
+    if(ev.target.classList.contains('wx')){
+      saveWatch(loadWatch().filter(x=>x!==ev.target.dataset.x)); renderWatch(); return;
+    }
+    document.getElementById('q').value=c.dataset.w; doSearch();
+  });
+}
+
+// ===== 恐懼貪婪指數儀表 =====
+function _fgPolar(cx,cy,r,deg){const a=deg*Math.PI/180; return [cx+r*Math.cos(a), cy-r*Math.sin(a)];}
+function _fgArc(cx,cy,r,v0,v1){
+  const [x0,y0]=_fgPolar(cx,cy,r,180-v0/100*180), [x1,y1]=_fgPolar(cx,cy,r,180-v1/100*180);
+  return `M ${x0.toFixed(1)} ${y0.toFixed(1)} A ${r} ${r} 0 0 1 ${x1.toFixed(1)} ${y1.toFixed(1)}`;
+}
+function fgLabel(v){
+  if(v<25) return {t:'極度恐慌',c:'#e8675c'};
+  if(v<45) return {t:'恐慌',c:'#e8954c'};
+  if(v<=55) return {t:'中性',c:'#e8c34c'};
+  if(v<=75) return {t:'貪婪',c:'#9cc96b'};
+  return {t:'極度貪婪',c:'#5cc98a'};
+}
+function fgGaugeHTML(v,vix){
+  const cx=130,cy=120,r=100;
+  const bands=[[0,25,'#e8675c'],[25,45,'#e8954c'],[45,55,'#e8c34c'],[55,75,'#9cc96b'],[75,100,'#5cc98a']];
+  const arcs=bands.map(b=>`<path d="${_fgArc(cx,cy,r,b[0],b[1])}" stroke="${b[2]}" stroke-width="15" fill="none"/>`).join('');
+  const [nx,ny]=_fgPolar(cx,cy,r-24,180-v/100*180);
+  const lab=fgLabel(v);
+  return `<div class="fg">
+    <div class="fg-gauge">
+      <svg viewBox="0 0 260 138" xmlns="http://www.w3.org/2000/svg">
+        ${arcs}
+        <line x1="${cx}" y1="${cy}" x2="${nx.toFixed(1)}" y2="${ny.toFixed(1)}" stroke="var(--ink)" stroke-width="3.5" stroke-linecap="round"/>
+        <circle cx="${cx}" cy="${cy}" r="7" fill="var(--ink)"/>
+      </svg>
+      <div class="fg-val" style="color:${lab.c}">${v}</div>
+      <div class="fg-lab" style="color:${lab.c}">${lab.t}</div>
+    </div>
+    <div class="fg-sub">恐懼貪婪指數 · ${vix!=null?('VIX '+vix.toFixed(2)+' ＋ 新聞情緒綜合推估'):'目前僅依新聞情緒推估（VIX 連線中）'}</div>
+  </div>`;
+}
+
 // ===== 總覽 =====
 let liveTW=null, liveUS=null;
 async function loadCol(id, query, snap, n){
@@ -562,6 +792,7 @@ async function loadCol(id, query, snap, n){
 async function loadDash(){
   setStatus('更新中…','busy');
   document.getElementById('refresh').disabled=true;
+  loadIndices();
   const [tw,us]=await Promise.all([
     loadCol('tw-list','台股 OR 台積電 OR 半導體 股市', SNAP_TW, 6),
     loadCol('us-list','美股 OR 那斯達克 OR 輝達 OR 標普', SNAP_US, 6),
@@ -637,6 +868,7 @@ calToggle.onclick=()=>{
   calToggle.textContent=showPast?'隱藏過去事件':'顯示過去事件';
   renderCal();
 };
+document.getElementById('cal-export').onclick=downloadICS;
 
 function countdownText(dateStr){
   const today=new Date(); today.setHours(0,0,0,0);
@@ -659,6 +891,7 @@ function renderCal(){
 
   if(!showPast) list=list.filter(e=>e.date>=todayStr);
   list.sort((a,b)=>a.date.localeCompare(b.date));
+  lastCalList=list;
 
   if(!list.length){out.innerHTML='<div class="empty">此類別暫無排定事件</div>';return;}
 
@@ -804,11 +1037,20 @@ function buildAnalysis(){
   const score=Math.round(50+50*(up-down)/total);
   saveScore(score);
   const history=loadHistory();
+  // 恐懼貪婪指數：新聞情緒 ＋ VIX 綜合
+  let fgVix=null;
+  if(liveIndices){ const v=liveIndices.find(x=>x.sym==='^VIX'); if(v&&v.live) fgVix=v.price; }
+  let fgScore=score;
+  if(fgVix!=null){
+    const vixGreed=Math.max(0,Math.min(100, 100-(fgVix-10)*4)); // VIX 10→貪婪100、35→恐慌0
+    fgScore=Math.round(score*0.5+vixGreed*0.5);
+  }
+  fgScore=Math.max(0,Math.min(100,fgScore));
   const mk=Math.max(2,Math.min(98,score));
   let lab,cls;
   if(score>=60){lab='偏多';cls='up';} else if(score<=40){lab='偏空';cls='down';} else {lab='中性';cls='neutral';}
 
-  let h=`<div class="gauge-wrap">
+  let h=fgGaugeHTML(fgScore,fgVix)+`<div class="gauge-wrap">
     <div class="gauge-top"><div class="gauge-label ${cls}">市場${lab}</div>
       <div class="gauge-score">情緒指數 ${score} / 100 · ${live?('即時 '+nowHM()):'離線快照'}</div></div>
     <div class="meter"><div class="mk" style="left:${mk}%"></div></div>
@@ -907,6 +1149,8 @@ document.querySelectorAll('.tab').forEach(t=>{
 // ===== 啟動：先畫快照 → 再嘗試即時 =====
 document.getElementById('tw-list').innerHTML=SNAP_TW.map(cardHTML).join('');
 document.getElementById('us-list').innerHTML=SNAP_US.map(cardHTML).join('');
+renderTicker(INDICES.map(ix=>({...ix, price:ix.snap.price, prev:ix.snap.prev, live:false})));
+renderWatch(); renderBanner();
 buildDigest(); renderCal(); buildAnalysis();
 loadDash();
 
