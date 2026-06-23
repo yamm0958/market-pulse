@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>市場脈動 · MarketPulse</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,900&family=Hanken+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#141310; --bg2:#1b1914; --bg3:#24211a;
+    --line:rgba(255,255,255,.08); --line2:rgba(255,255,255,.14);
+    --ink:#f1ece0; --dim:#9c968a; --faint:#6b665c;
+    --amber:#e8a33d; --amber-soft:#f0c279;
+    --up:#5cc98a; --down:#e8675c; --neutral:#9c968a;
+    --display:'Fraunces','Noto Serif TC',serif;
+    --sans:'Hanken Grotesk','Noto Sans TC',sans-serif;
+    --mono:'IBM Plex Mono',monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{-webkit-font-smoothing:antialiased}
+  body{background:var(--bg); color:var(--ink); font-family:var(--sans); line-height:1.6; min-height:100vh; position:relative; overflow-x:hidden}
+  body::before{content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
+    background:radial-gradient(120% 80% at 70% -10%, rgba(232,163,61,.10), transparent 55%),radial-gradient(90% 60% at 0% 0%, rgba(92,201,138,.04), transparent 50%)}
+  body::after{content:''; position:fixed; inset:0; pointer-events:none; z-index:0; opacity:.04;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+  .wrap{position:relative; z-index:1; max-width:1180px; margin:0 auto; padding:0 24px}
+
+  header{padding:34px 0 18px; border-bottom:1px solid var(--line)}
+  .topbar{display:flex; align-items:flex-end; justify-content:space-between; gap:20px; flex-wrap:wrap}
+  .brand{display:flex; align-items:baseline; gap:14px}
+  .logo{font-family:var(--display); font-weight:900; font-size:38px; letter-spacing:-.02em; line-height:.9}
+  .logo em{font-style:italic; color:var(--amber)}
+  .sub{font-family:var(--mono); font-size:11px; letter-spacing:.22em; text-transform:uppercase; color:var(--dim)}
+  .live{display:flex; align-items:center; gap:8px; font-family:var(--mono); font-size:11.5px; color:var(--dim); letter-spacing:.05em}
+  .dot{width:8px; height:8px; border-radius:50%; background:var(--up); box-shadow:0 0 0 0 rgba(92,201,138,.6); animation:pulse 2s infinite}
+  .dot.off{background:var(--faint); animation:none}
+  .dot.busy{background:var(--amber); animation:pulse 1s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(92,201,138,.5)}70%{box-shadow:0 0 0 7px rgba(92,201,138,0)}100%{box-shadow:0 0 0 0 rgba(92,201,138,0)}}
+
+  nav.tabs{display:flex; gap:6px; margin-top:22px; flex-wrap:wrap}
+  .tab{font-family:var(--sans); font-weight:600; font-size:14.5px; color:var(--dim); background:none; border:none; cursor:pointer; padding:10px 18px; border-radius:999px; transition:.25s; display:flex; align-items:center; gap:8px}
+  .tab .tw{font-family:var(--mono); font-size:11px; opacity:.6}
+  .tab:hover{color:var(--ink); background:var(--bg2)}
+  .tab.on{color:var(--bg); background:var(--amber)}
+  .tab.on .tw{opacity:.7; color:var(--bg)}
+
+  main{padding:30px 0 80px}
+  .panel{display:none; animation:fade .5s ease both}
+  .panel.on{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+  .secrow{display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:18px; flex-wrap:wrap}
+  .sectitle{font-family:var(--display); font-weight:600; font-size:25px; letter-spacing:-.01em}
+  .sectitle .tag{font-family:var(--mono); font-size:11px; color:var(--amber); vertical-align:super; margin-left:8px; letter-spacing:.1em}
+  .btn{font-family:var(--sans); font-weight:600; font-size:13px; color:var(--ink); background:var(--bg2); border:1px solid var(--line2); border-radius:999px; padding:9px 18px; cursor:pointer; transition:.2s; display:inline-flex; align-items:center; gap:7px}
+  .btn:hover{border-color:var(--amber); color:var(--amber-soft)}
+  .btn:disabled{opacity:.45; cursor:wait}
+  .btn svg{width:15px; height:15px}
+
+  .cols{display:grid; grid-template-columns:1fr 1fr; gap:22px}
+  @media(max-width:820px){.cols{grid-template-columns:1fr}}
+  .colhead{display:flex; align-items:center; gap:10px; margin-bottom:14px; padding-bottom:12px; border-bottom:1px solid var(--line)}
+  .flag{font-family:var(--mono); font-size:11px; font-weight:600; padding:4px 10px; border-radius:6px; letter-spacing:.08em}
+  .flag.tw{background:rgba(232,163,61,.14); color:var(--amber-soft)}
+  .flag.us{background:rgba(92,201,138,.14); color:var(--up)}
+  .colhead h3{font-family:var(--display); font-weight:600; font-size:19px}
+
+  .card{background:var(--bg2); border:1px solid var(--line); border-radius:14px; padding:18px 18px 16px; margin-bottom:14px; transition:.25s; position:relative; overflow:hidden}
+  .card::before{content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--neutral); opacity:.5}
+  .card.up::before{background:var(--up)} .card.down::before{background:var(--down)} .card.neutral::before{background:var(--amber)}
+  .card:hover{border-color:var(--line2); transform:translateY(-2px); background:var(--bg3)}
+  .cmeta{display:flex; align-items:center; gap:10px; margin-bottom:9px; font-family:var(--mono); font-size:11px; color:var(--faint)}
+  .src{color:var(--amber-soft); letter-spacing:.04em}
+  .src-tier1{color:var(--up)}
+  .src-tier2{color:var(--amber-soft)}
+  .src-tier3{color:var(--faint)}
+  .ctitle{font-family:var(--display); font-weight:600; font-size:18.5px; line-height:1.32; letter-spacing:-.005em; margin-bottom:8px}
+  .ctitle a{color:var(--ink); text-decoration:none; transition:.2s}
+  .ctitle a:hover{color:var(--amber-soft)}
+  .csum{font-size:14px; color:var(--dim); line-height:1.62}
+  .chips{display:flex; gap:6px; flex-wrap:wrap; margin-top:12px}
+  .chip{font-family:var(--mono); font-size:11px; padding:3px 9px; border-radius:6px; background:var(--bg3); color:var(--amber-soft); border:1px solid var(--line)}
+  .sent{margin-left:auto; font-family:var(--mono); font-size:11px; font-weight:600}
+  .sent.up{color:var(--up)} .sent.down{color:var(--down)} .sent.neutral{color:var(--dim)}
+
+  .searchbox{display:flex; gap:10px; margin-bottom:8px}
+  .searchbox input{flex:1; background:var(--bg2); border:1px solid var(--line2); border-radius:12px; padding:15px 18px; color:var(--ink); font-family:var(--sans); font-size:15.5px; outline:none; transition:.2s}
+  .searchbox input:focus{border-color:var(--amber)}
+  .searchbox input::placeholder{color:var(--faint)}
+  .searchbox .btn{padding:0 24px; background:var(--amber); color:var(--bg); border:none; font-size:14.5px}
+  .searchbox .btn:hover{background:var(--amber-soft); color:var(--bg)}
+  .hints{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:24px}
+  .hint{font-family:var(--mono); font-size:12px; color:var(--dim); background:var(--bg2); border:1px solid var(--line); padding:6px 12px; border-radius:999px; cursor:pointer; transition:.2s}
+  .hint:hover{border-color:var(--amber); color:var(--amber-soft)}
+
+  .digest{background:linear-gradient(165deg,var(--bg2),var(--bg)); border:1px solid var(--line2); border-radius:18px; padding:30px 28px}
+  .digest .dh{font-family:var(--display); font-weight:900; font-size:26px; margin-bottom:6px}
+  .digest .dt{font-family:var(--mono); font-size:11px; color:var(--dim); letter-spacing:.1em; margin-bottom:22px}
+  .ditem{display:flex; gap:16px; padding:16px 0; border-top:1px solid var(--line)}
+  .ditem:first-of-type{border-top:none; padding-top:0}
+  .dnum{font-family:var(--display); font-weight:900; font-size:30px; color:var(--amber); line-height:1; min-width:38px}
+  .dbody h4{font-family:var(--display); font-weight:600; font-size:18px; margin-bottom:6px; line-height:1.3}
+  .dbody h4 a{color:var(--ink); text-decoration:none} .dbody h4 a:hover{color:var(--amber-soft)}
+  .dbody p{font-size:13px; color:var(--faint); font-family:var(--mono); letter-spacing:.03em}
+
+  /* 指數看板 */
+  .ticker{display:grid; grid-template-columns:repeat(5,1fr); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:14px; overflow:hidden; margin-top:18px}
+  @media(max-width:760px){.ticker{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:420px){.ticker{grid-template-columns:1fr}}
+  .tk{background:var(--bg2); padding:11px 14px; display:flex; flex-direction:column; gap:2px; transition:.2s}
+  .tk:hover{background:var(--bg3)}
+  .tk .tknm{font-family:var(--mono); font-size:10.5px; color:var(--dim); letter-spacing:.04em; display:flex; align-items:center; gap:6px; flex-wrap:wrap}
+  .tk .tkst{font-family:var(--mono); font-size:8.5px; padding:1px 5px; border-radius:4px; background:var(--bg3); color:var(--faint); letter-spacing:.04em}
+  .tk .tkst.pre{background:rgba(107,168,216,.16); color:#9cc5e8}
+  .tk .tkst.post{background:rgba(232,163,61,.16); color:var(--amber-soft)}
+  .tk .tkst.open{background:rgba(92,201,138,.16); color:var(--up)}
+  .tk .tkpx{font-family:var(--mono); font-size:18px; font-weight:600; letter-spacing:-.01em}
+  .tk .tkch{font-family:var(--mono); font-size:11.5px; font-weight:500}
+  .tk.up .tkpx,.tk.up .tkch{color:var(--up)} .tk.down .tkpx,.tk.down .tkch{color:var(--down)} .tk.flat .tkpx{color:var(--ink)} .tk.flat .tkch{color:var(--dim)}
+  .tk .tkextra{font-family:var(--mono); font-size:10px; color:var(--faint); margin-top:1px}
+
+  /* 事件提醒橫幅 */
+  .evbanner{display:flex; align-items:center; gap:13px; background:linear-gradient(100deg,rgba(232,163,61,.16),rgba(232,163,61,.03)); border:1px solid rgba(232,163,61,.32); border-radius:12px; padding:12px 16px; margin-top:16px}
+  .evbanner .eb-ico{font-size:17px}
+  .evbanner .eb-body{flex:1; min-width:0}
+  .evbanner .eb-t{font-family:var(--sans); font-weight:600; font-size:14px; color:var(--amber-soft)}
+  .evbanner .eb-s{font-family:var(--mono); font-size:11px; color:var(--dim); margin-top:2px}
+  .evbanner .eb-go{font-family:var(--mono); font-size:11px; color:var(--amber-soft); cursor:pointer; border:1px solid rgba(232,163,61,.4); border-radius:999px; padding:5px 12px; white-space:nowrap}
+  .evbanner .eb-go:hover{background:rgba(232,163,61,.16)}
+
+  /* 我的關注 */
+  .watch{background:var(--bg2); border:1px solid var(--line); border-radius:14px; padding:16px 18px; margin-bottom:18px}
+  .watch .wh{display:flex; align-items:baseline; justify-content:space-between; margin-bottom:12px; gap:10px}
+  .watch .wh h4{font-family:var(--display); font-weight:600; font-size:16px}
+  .watch .wh .whint{font-family:var(--mono); font-size:10.5px; color:var(--faint)}
+  .watch .wadd{display:flex; gap:8px; margin-bottom:12px}
+  .watch .wadd input{flex:1; background:var(--bg3); border:1px solid var(--line2); border-radius:9px; padding:9px 12px; color:var(--ink); font-family:var(--sans); font-size:13.5px; outline:none; transition:.2s}
+  .watch .wadd input:focus{border-color:var(--amber)}
+  .watch .wadd button{background:var(--amber); color:var(--bg); border:none; border-radius:9px; padding:0 16px; font-family:var(--sans); font-weight:600; font-size:13px; cursor:pointer; transition:.2s}
+  .watch .wadd button:hover{background:var(--amber-soft)}
+  .watchlist{display:flex; gap:8px; flex-wrap:wrap}
+  .wchip{display:inline-flex; align-items:center; gap:6px; font-family:var(--mono); font-size:12px; color:var(--amber-soft); background:var(--bg3); border:1px solid var(--line); padding:6px 8px 6px 13px; border-radius:999px; cursor:pointer; transition:.2s}
+  .wchip:hover{border-color:var(--amber)}
+  .wchip .wx{font-size:13px; color:var(--faint); width:17px; height:17px; display:inline-flex; align-items:center; justify-content:center; border-radius:50%; transition:.15s}
+  .wchip .wx:hover{background:var(--down); color:#fff}
+  .wempty{font-family:var(--mono); font-size:12px; color:var(--faint)}
+
+  /* 恐懼貪婪指數 */
+  .fg{background:var(--bg2); border:1px solid var(--line); border-radius:16px; padding:22px 24px 20px; margin-bottom:26px; text-align:center}
+  .fg-gauge{position:relative; width:260px; max-width:100%; margin:0 auto}
+  .fg-gauge svg{width:100%; height:auto; display:block}
+  .fg-val{font-family:var(--display); font-weight:900; font-size:40px; line-height:1; margin-top:-34px}
+  .fg-lab{font-family:var(--mono); font-size:13px; letter-spacing:.1em; margin-top:5px; font-weight:600}
+  .fg-sub{font-family:var(--mono); font-size:11px; color:var(--faint); margin-top:12px; line-height:1.5}
+
+  /* 行事曆 */
+  .cal-toolbar{display:flex; gap:12px; align-items:center; margin-bottom:20px; flex-wrap:wrap}
+  .filters{display:flex; gap:8px; flex-wrap:wrap}
+  .filt{font-family:var(--sans); font-weight:600; font-size:13px; color:var(--dim); background:var(--bg2); border:1px solid var(--line); padding:7px 15px; border-radius:999px; cursor:pointer; transition:.2s}
+  .filt:hover{border-color:var(--line2); color:var(--ink)}
+  .filt.on{background:var(--ink); color:var(--bg); border-color:var(--ink)}
+  .cal-toggle{font-family:var(--mono); font-size:12px; color:var(--dim); background:var(--bg2); border:1px solid var(--line); padding:7px 14px; border-radius:999px; cursor:pointer; transition:.2s; margin-left:auto}
+  .cal-toggle:hover{border-color:var(--amber); color:var(--amber-soft)}
+  .daygroup{margin-bottom:24px}
+  .daygroup.past{opacity:.45}
+  .dayhead{display:flex; align-items:baseline; gap:12px; margin-bottom:12px; padding-bottom:8px; border-bottom:1px solid var(--line)}
+  .dayhead .dd{font-family:var(--display); font-weight:900; font-size:24px}
+  .dayhead .dm{font-family:var(--mono); font-size:11px; color:var(--faint); letter-spacing:.1em}
+  .dayhead .dw{font-family:var(--mono); font-size:11px; color:var(--amber-soft); letter-spacing:.08em}
+  .dayhead .today-badge{font-family:var(--mono); font-size:10px; background:var(--amber); color:var(--bg); padding:2px 8px; border-radius:999px; font-weight:600; letter-spacing:.06em}
+  .ev{display:flex; align-items:flex-start; gap:14px; background:var(--bg2); border:1px solid var(--line); border-radius:12px; padding:14px 16px; margin-bottom:10px; transition:.2s}
+  .ev:hover{border-color:var(--line2); background:var(--bg3)}
+  .ev.today-ev{border-color:rgba(232,163,61,.4); background:rgba(232,163,61,.05)}
+  .ev .bar{width:4px; align-self:stretch; border-radius:4px; background:var(--neutral); flex-shrink:0}
+  .ev.amber .bar{background:var(--amber)} .ev.green .bar{background:var(--up)} .ev.blue .bar{background:#6ba8d8} .ev.red .bar{background:var(--down)}
+  .ev .body{flex:1; min-width:0}
+  .ev .row1{display:flex; align-items:center; gap:9px; margin-bottom:4px; flex-wrap:wrap}
+  .ev .cat{font-family:var(--mono); font-size:10.5px; font-weight:600; padding:3px 8px; border-radius:5px; letter-spacing:.05em}
+  .cat.amber{background:rgba(232,163,61,.16); color:var(--amber-soft)}
+  .cat.green{background:rgba(92,201,138,.16); color:var(--up)}
+  .cat.blue{background:rgba(107,168,216,.16); color:#9cc5e8}
+  .cat.red{background:rgba(232,103,92,.16); color:var(--down)}
+  .cat.neutral{background:var(--bg3); color:var(--dim)}
+  .ev .rflag{font-family:var(--mono); font-size:10px; color:var(--faint); border:1px solid var(--line2); padding:2px 6px; border-radius:4px}
+  .ev .imp{margin-left:auto; display:flex; gap:3px}
+  .ev .imp i{width:6px; height:6px; border-radius:50%; background:var(--line2)}
+  .ev .imp i.f{background:var(--amber)}
+  .ev .name{font-family:var(--display); font-weight:600; font-size:16.5px; line-height:1.3}
+  .ev .note{font-size:13px; color:var(--dim); margin-top:3px; line-height:1.55}
+  .ev .countdown{font-family:var(--mono); font-size:11px; margin-top:6px}
+  .ev .countdown.today{color:var(--amber); font-weight:600}
+  .ev .countdown.soon{color:var(--up)}
+  .ev .countdown.future{color:var(--faint)}
+  .ev .countdown.past{color:var(--faint)}
+  .ev .ev-time{font-family:var(--mono); font-size:11.5px; color:var(--amber-soft); margin-top:6px; display:flex; align-items:center; gap:5px}
+  .ev .ev-time svg{width:12px;height:12px;flex-shrink:0}
+  .ev-stats{display:flex; gap:16px; margin-top:8px; flex-wrap:wrap}
+  .ev-stat{font-family:var(--mono); font-size:11.5px; background:var(--bg3); border:1px solid var(--line); border-radius:7px; padding:5px 10px; line-height:1.45}
+  .ev-stat .sv{color:var(--ink); font-weight:600}
+  .ev-stat .sk{color:var(--faint); font-size:10.5px; display:block; margin-bottom:1px}
+  .ev-link{display:inline-flex; align-items:center; gap:5px; margin-top:8px; font-family:var(--mono); font-size:11px; color:var(--faint); text-decoration:none; border:1px solid var(--line); border-radius:6px; padding:4px 10px; transition:.2s}
+  .ev-link:hover{border-color:var(--amber); color:var(--amber-soft)}
+
+  /* 分析 */
+  .gauge-wrap{background:var(--bg2); border:1px solid var(--line); border-radius:16px; padding:26px 24px; margin-bottom:26px}
+  .gauge-top{display:flex; align-items:baseline; justify-content:space-between; gap:12px; margin-bottom:18px; flex-wrap:wrap}
+  .gauge-label{font-family:var(--display); font-weight:900; font-size:34px; letter-spacing:-.01em}
+  .gauge-label.up{color:var(--up)} .gauge-label.down{color:var(--down)} .gauge-label.neutral{color:var(--amber)}
+  .gauge-score{font-family:var(--mono); font-size:12px; color:var(--dim); letter-spacing:.04em}
+  .meter{height:12px; border-radius:8px; background:linear-gradient(90deg,var(--down),var(--amber) 50%,var(--up)); position:relative; margin:10px 0 7px}
+  .meter .mk{position:absolute; top:-5px; width:4px; height:22px; background:var(--ink); border-radius:3px; transform:translateX(-2px); box-shadow:0 0 0 3px var(--bg2); transition:left .5s}
+  .meter-scale{display:flex; justify-content:space-between; font-family:var(--mono); font-size:10.5px; color:var(--faint); letter-spacing:.06em}
+  .tally{display:flex; gap:20px; margin-top:16px; font-family:var(--mono); font-size:13px}
+  .tally b{font-weight:600} .tally .u{color:var(--up)} .tally .d{color:var(--down)} .tally .n{color:var(--dim)}
+
+  /* 情緒歷史折線 */
+  .history-chart{margin-top:20px; padding-top:16px; border-top:1px solid var(--line)}
+  .history-title{font-family:var(--mono); font-size:11px; color:var(--faint); letter-spacing:.08em; margin-bottom:10px}
+  .sparkline{width:100%; height:56px}
+
+  .sector{margin-bottom:15px}
+  .sector .sh{display:flex; align-items:center; justify-content:space-between; margin-bottom:6px}
+  .sector .snm{font-family:var(--sans); font-weight:600; font-size:14.5px}
+  .sector .stag{font-family:var(--mono); font-size:11px; font-weight:600}
+  .sector .stag.up{color:var(--up)} .sector .stag.down{color:var(--down)} .sector .stag.neutral{color:var(--dim)}
+  .sbar{height:8px; border-radius:6px; background:var(--bg3); overflow:hidden; display:flex}
+  .sbar .pos{background:var(--up); height:100%} .sbar .neg{background:var(--down); height:100%}
+  .sector .scount{font-family:var(--mono); font-size:11px; color:var(--faint); margin-top:5px}
+  .disc{font-size:12px; color:var(--faint); line-height:1.65; margin-top:22px; padding-top:16px; border-top:1px solid var(--line); font-family:var(--mono)}
+
+  .an-section{margin-bottom:30px}
+  .an-h{font-family:var(--display); font-weight:600; font-size:19px; margin-bottom:14px; display:flex; align-items:baseline; gap:10px; flex-wrap:wrap}
+  .an-h .hint2{font-family:var(--mono); font-size:11px; color:var(--faint); font-weight:400; letter-spacing:.02em}
+  .bb{display:grid; grid-template-columns:1fr 1fr; gap:16px}
+  @media(max-width:720px){.bb{grid-template-columns:1fr}}
+  .bbcol{background:var(--bg2); border:1px solid var(--line); border-radius:14px; padding:16px 18px}
+  .bbcol h5{font-family:var(--mono); font-size:12px; letter-spacing:.08em; margin-bottom:8px}
+  .bbcol.bull h5{color:var(--up)} .bbcol.bear h5{color:var(--down)}
+  .bbitem{display:block; padding:10px 0; border-top:1px solid var(--line); font-size:14px; color:var(--ink); text-decoration:none; line-height:1.42; transition:.15s}
+  .bbitem:hover{color:var(--amber-soft)}
+  .bbitem .bsrc{display:block; font-family:var(--mono); font-size:10.5px; color:var(--faint); margin-top:3px}
+  .bbempty{font-family:var(--mono); font-size:12px; color:var(--faint); padding:8px 0}
+
+  .ent{display:flex; align-items:center; gap:12px; padding:11px 14px; background:var(--bg2); border:1px solid var(--line); border-radius:10px; margin-bottom:8px; cursor:pointer; transition:.2s}
+  .ent:hover{border-color:var(--line2); background:var(--bg3)}
+  .ent .erank{font-family:var(--mono); font-size:12px; color:var(--faint); min-width:18px}
+  .ent .enm{font-family:var(--sans); font-weight:600; font-size:14.5px; flex:1}
+  .ent .ecnt{font-family:var(--mono); font-size:12px; color:var(--dim)}
+  .ent .etag{font-family:var(--mono); font-size:11px; font-weight:600; min-width:42px; text-align:right}
+  .ent .etag.up{color:var(--up)} .ent .etag.down{color:var(--down)} .ent .etag.neutral{color:var(--dim)}
+  .ent-detail{display:none; padding:8px 14px 12px; background:var(--bg2); border:1px solid var(--line); border-top:none; border-radius:0 0 10px 10px; margin-top:-8px; margin-bottom:8px}
+  .ent-detail.open{display:block}
+  .ent-detail a{display:block; font-size:13px; color:var(--dim); text-decoration:none; padding:7px 0; border-top:1px dashed var(--line); line-height:1.45}
+  .ent-detail a:first-child{border-top:none}
+  .ent-detail a:hover{color:var(--amber-soft)}
+  .ent-detail a .ds{font-family:var(--mono); font-size:10.5px; color:var(--faint)}
+  .ent.open{border-radius:10px 10px 0 0; border-bottom-color:transparent}
+
+  .sector{cursor:pointer}
+  .sector .sdetail{display:none; margin-top:10px}
+  .sector.open .sdetail{display:block}
+  .sector .sdetail a{display:block; font-size:13px; color:var(--dim); text-decoration:none; padding:7px 0; border-top:1px dashed var(--line); line-height:1.45}
+  .sector .sdetail a:hover{color:var(--amber-soft)}
+  .sector .sdetail a .ds{font-family:var(--mono); font-size:10.5px; color:var(--faint)}
+
+  .loading{display:flex; flex-direction:column; align-items:center; padding:50px 0; color:var(--dim)}
+  .spin{width:32px; height:32px; border:3px solid var(--line2); border-top-color:var(--amber); border-radius:50%; animation:rot .8s linear infinite; margin-bottom:14px}
+  @keyframes rot{to{transform:rotate(360deg)}}
+  .loading p{font-family:var(--mono); font-size:12px; letter-spacing:.06em}
+  .skel{background:var(--bg2); border:1px solid var(--line); border-radius:14px; padding:18px; margin-bottom:14px}
+  .skel .l{height:13px; background:linear-gradient(90deg,var(--bg3),var(--line),var(--bg3)); background-size:200% 100%; animation:sh 1.3s infinite; border-radius:5px; margin-bottom:9px}
+  @keyframes sh{to{background-position:-200% 0}}
+  .empty{text-align:center; color:var(--faint); padding:50px 0; font-family:var(--mono); font-size:13px}
+  footer{border-top:1px solid var(--line); padding:24px 0 36px; color:var(--faint); font-size:12px; font-family:var(--mono); line-height:1.7; letter-spacing:.02em}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="topbar">
+      <div class="brand"><div class="logo">市場<em>脈動</em></div><div class="sub">MarketPulse</div></div>
+      <div class="live"><span class="dot busy" id="dot"></span><span id="status">啟動中…</span></div>
+    </div>
+    <nav class="tabs">
+      <button class="tab on" data-tab="dash"><span class="tw">01</span>總覽</button>
+      <button class="tab" data-tab="search"><span class="tw">02</span>搜尋</button>
+      <button class="tab" data-tab="digest"><span class="tw">03</span>懶人包</button>
+      <button class="tab" data-tab="cal"><span class="tw">04</span>行事曆</button>
+      <button class="tab" data-tab="analysis"><span class="tw">05</span>分析</button>
+    </nav>
+  </header>
+
+  <div id="ticker" class="ticker"></div>
+  <div id="ev-banner"></div>
+
+  <main>
+    <section class="panel on" id="dash">
+      <div class="secrow">
+        <div class="sectitle">即時市場快訊<span class="tag">LIVE</span></div>
+        <button class="btn" id="refresh">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-2.6-6.4"/><path d="M21 3v6h-6"/></svg>重新整理
+        </button>
+      </div>
+      <div class="cols">
+        <div><div class="colhead"><span class="flag tw">TW</span><h3>台股</h3></div><div id="tw-list"></div></div>
+        <div><div class="colhead"><span class="flag us">US</span><h3>美股</h3></div><div id="us-list"></div></div>
+      </div>
+    </section>
+
+    <section class="panel" id="search">
+      <div class="sectitle" style="margin-bottom:18px">搜尋市場消息</div>
+      <div class="searchbox">
+        <input id="q" type="text" placeholder="輸入股票名稱、代號或主題，例如：台積電、輝達、半導體、Fed 利率…">
+        <button class="btn" id="go">搜尋</button>
+      </div>
+      <div id="watch-box"></div>
+      <div class="hints" id="hints"></div>
+      <div id="search-results"></div>
+    </section>
+
+    <section class="panel" id="digest">
+      <div class="sectitle" style="margin-bottom:18px">市場懶人包<span class="tag">頭條速覽</span></div>
+      <div id="digest-out"></div>
+    </section>
+
+    <section class="panel" id="cal">
+      <div class="sectitle" style="margin-bottom:18px">市場行事曆<span class="tag">UPCOMING</span></div>
+      <div class="cal-toolbar">
+        <div class="filters" id="cal-filters"></div>
+        <button class="cal-toggle" id="cal-export">⤓ 匯出 .ics</button>
+        <button class="cal-toggle" id="cal-toggle" style="margin-left:0">顯示過去事件</button>
+      </div>
+      <div id="cal-out"></div>
+    </section>
+
+    <section class="panel" id="analysis">
+      <div class="secrow">
+        <div class="sectitle">市場溫度<span class="tag">消息面情緒</span></div>
+        <button class="btn" id="refresh-an">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-2.6-6.4"/><path d="M21 3v6h-6"/></svg>重新分析
+        </button>
+      </div>
+      <div id="analysis-out"></div>
+    </section>
+  </main>
+
+  <footer>
+    市場脈動 MarketPulse · 即時消息來自 Google 新聞 RSS，連線失敗時顯示離線快照<br>
+    內容僅供資訊參考，非投資建議。行事曆日期請以官方公布為準。
+  </footer>
+</div>
+
+<script>
+// ===== 離線備援快照 =====
+const SNAP_TW=[
+  {title:"台股持續走強 加權指數站穩44,000點關卡",source:"中央社",time:"6/15",sentiment:"up",summary:"今日台股震盪偏強，半導體族群引領指數維持高檔，三大法人偏多操作。",url:"https://www.cmoney.tw/forum/market",tickers:["加權指數"]},
+  {title:"台積電外資持續買超 CoWoS封裝需求強勁",source:"經濟日報",time:"6/15",sentiment:"up",summary:"外資連續布局台積電，先進封裝CoWoS供不應求，AI伺服器需求持續強勁。",url:"https://money.udn.com/",tickers:["2330"]},
+  {title:"聯發科天璣新平台發表 股價創波段新高",source:"工商時報",time:"6/14",sentiment:"up",summary:"聯發科發表新一代行動晶片，AI效能提升，市場反應正面。",url:"https://www.ctee.com.tw/",tickers:["2454"]},
+  {title:"廣達、英業達 AI伺服器出貨加速 法人調升目標價",source:"MoneyDJ",time:"6/13",sentiment:"up",summary:"AI伺服器ODM廠商訂單能見度高，廣達、英業達等法人紛紛調升目標價。",url:"https://www.moneydj.com/",tickers:["2382"]},
+  {title:"台幣升值壓力 出口商拋匯積極",source:"聯合報",time:"6/13",sentiment:"neutral",summary:"新台幣匯率升破30.5關卡，出口商拋匯壓力增加，外匯市場交投活絡。",url:"https://udn.com/",tickers:[]},
+];
+const SNAP_US=[
+  {title:"輝達 NVDA 股價再創歷史新高 市值突破 4 兆美元",source:"CNBC",time:"6/15",sentiment:"up",summary:"輝達股價再度刷新高點，AI晶片需求強勁，市值突破4兆美元大關。",url:"https://www.cnbc.com/",tickers:["NVDA"]},
+  {title:"美股三大指數收高 Fed 降息預期支撐市場",source:"Reuters",time:"6/14",sentiment:"up",summary:"聯準會官員暗示通膨降溫進展順利，市場對年內降息預期升溫，三大指數同步走強。",url:"https://www.reuters.com/",tickers:["GSPC","IXIC"]},
+  {title:"蘋果 WWDC 發表 AI 新功能 Apple Intelligence 全面更新",source:"Bloomberg",time:"6/13",sentiment:"up",summary:"蘋果發表下一代 Apple Intelligence 功能，整合第三方 AI 模型，消費電子升級週期受關注。",url:"https://www.bloomberg.com/",tickers:["AAPL"]},
+  {title:"AMD MI400 系列晶片迎戰輝達 B300 競爭格局白熱化",source:"The Verge",time:"6/12",sentiment:"up",summary:"AMD 宣布新一代 AI 加速器路線圖，分析師看好 2026 年下半市占提升空間。",url:"https://www.theverge.com/",tickers:["AMD"]},
+  {title:"美國 5 月 CPI 數據低於預期 通膨降溫趨勢明確",source:"WSJ",time:"6/11",sentiment:"up",summary:"5 月 CPI 年增 2.6%，核心 CPI 2.8%，均低於市場預期，Fed 9 月降息機率上升。",url:"https://www.wsj.com/",tickers:[]},
+];
+
+// ===== 行事曆事件（含台股與美股） =====
+// 欄位說明：date/name/type/region/importance/note/time/prev/forecast/link
+const CAL_EVENTS=[
+  // ── 六月 ──
+  {date:"2026-06-11",name:"美國 5 月 CPI 公布",type:"經濟數據",region:"美股",importance:3,
+   time:"20:30 台灣時間（08:30 ET）",prev:"年增 2.7%，核心 2.9%",forecast:"年增 2.6%，核心 2.8%",
+   note:"通膽核心數據，低於預期通常推升股市。BLS 每月第二個或第三個週三公布。",
+   link:"https://www.bls.gov/cpi/"},
+  {date:"2026-06-13",name:"台灣 5 月進出口貿易統計",type:"經濟數據",region:"台股",importance:2,
+   time:"16:00（財政部記者會）",prev:"出口年增 22.3%",forecast:"出口年增 18～20%",
+   note:"半導體出口佔整體比重超過 40%，直接反映 AI 供應鏈需求強弱。",
+   link:"https://www.mof.gov.tw/"},
+  {date:"2026-06-16",name:"FOMC 利率會議（第一天）",type:"央行",region:"全球",importance:3,
+   time:"整日",prev:"目前利率 4.25～4.50%",forecast:"預期維持不變",
+   note:"為期兩天的閉門會議，聚焦最新 PCE、就業數據評估。",
+   link:"https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"},
+  {date:"2026-06-17",name:"FOMC 利率決策 + 鮑爾記者會",type:"央行",region:"全球",importance:3,
+   time:"02:00 台灣時間（14:00 ET）發聲明；02:30 記者會",prev:"維持 4.25～4.50%（2025年12月起）",forecast:"市場預期維持不變，關注點陣圖降息次數",
+   note:"同步公布點陣圖（dot plot）與最新經濟展望 SEP。全年最重要利率事件之一。",
+   link:"https://www.federalreserve.gov/"},
+  {date:"2026-06-19",name:"Juneteenth 美股全日休市",type:"其他",region:"美股",importance:1,
+   time:"全日休市",prev:"—",forecast:"—",
+   note:"美國聯邦假日，NYSE 及 NASDAQ 全日關閉，台股正常交易。",
+   link:"https://www.nyse.com/markets/hours-calendars"},
+  {date:"2026-06-19",name:"台灣央行理監事聯席會議",type:"央行",region:"台股",importance:3,
+   time:"15:30（央行記者會）",prev:"維持 2.00%（連五次不變）",forecast:"預期維持 2.00%，關注升值壓力說明",
+   note:"每季一次利率決策，同步公布最新 GDP 及 CPI 預測。台幣升值壓力為本次討論焦點。",
+   link:"https://www.cbc.gov.tw/"},
+  {date:"2026-06-20",name:"美國 5 月零售銷售",type:"經濟數據",region:"美股",importance:2,
+   time:"20:30 台灣時間",prev:"月增 +0.1%",forecast:"月增 +0.3%",
+   note:"反映美國消費者支出動能，影響市場對景氣軟著陸的判斷。",
+   link:"https://www.census.gov/retail/"},
+  {date:"2026-06-24",name:"輝達（NVDA）年度股東會",type:"股東會",region:"美股",importance:2,
+   time:"線上，約 22:00 台灣時間（10:00 PT）",prev:"2025 年股東會通過全部議案",forecast:"改選董事、薪酬方案投票，黃仁勳或釋出下半年展望",
+   note:"議程含董事改選、薪酬投票，黃仁勳 Q&A 為市場焦點。",
+   link:"https://investor.nvidia.com/"},
+  {date:"2026-06-26",name:"美國 Q1 GDP 終值",type:"經濟數據",region:"美股",importance:2,
+   time:"20:30 台灣時間",prev:"Q1 初值年化 +1.2%",forecast:"終值年化 +1.3%",
+   note:"GDP 第三次修正，為最終確定數值，通常與二次修正差距不大。",
+   link:"https://www.bea.gov/"},
+  {date:"2026-06-27",name:"美國 5 月 PCE 物價指數",type:"經濟數據",region:"美股",importance:3,
+   time:"20:30 台灣時間",prev:"整體年增 2.2%，核心 2.5%",forecast:"整體年增 2.1%，核心 2.4%",
+   note:"聯準會最偏好的通膨衡量指標。若核心 PCE 持續降溫，9 月降息概率大增。",
+   link:"https://www.bea.gov/data/personal-consumption-expenditures-price-index"},
+  {date:"2026-06-30",name:"台股半年結算日（法人作帳日）",type:"其他",region:"台股",importance:2,
+   time:"尾盤 13:25～13:30 留意異常波動",prev:"2025 下半年指數上漲 18%",forecast:"法人作帳效應，強勢股可能拉尾盤，弱勢股易遭棄守",
+   note:"半年度投資組合結算日，三大法人買賣動作較平日劇烈，散戶留意尾盤流動性風險。",
+   link:"https://www.twse.com.tw/"},
+  // ── 七月 ──
+  {date:"2026-07-01",name:"美國 6 月 ISM 製造業 PMI",type:"經濟數據",region:"美股",importance:2,
+   time:"22:00 台灣時間",prev:"49.3（收縮區間）",forecast:"49.8",
+   note:"製造業景氣先行指標，50 以上為擴張。連續萎縮可能引發衰退疑慮。",
+   link:"https://www.ismworld.org/"},
+  {date:"2026-07-02",name:"美國 6 月非農就業報告（NFP）",type:"經濟數據",region:"美股",importance:3,
+   time:"20:30 台灣時間",prev:"新增 18.0 萬人；失業率 4.1%",forecast:"新增 16.5 萬人；失業率 4.1%",
+   note:"就業市場強弱直接影響 Fed 降息時間表。當日美股成交量通常放大，台股隔日開盤留意跳空。",
+   link:"https://www.bls.gov/ces/"},
+  {date:"2026-07-04",name:"美國獨立紀念日 美股全日休市",type:"其他",region:"美股",importance:1,
+   time:"全日休市",prev:"—",forecast:"—",
+   note:"美國國定假日，NYSE 及 NASDAQ 全日關閉，台股正常交易。",
+   link:"https://www.nyse.com/markets/hours-calendars"},
+  {date:"2026-07-10",name:"美國 6 月 CPI 公布",type:"經濟數據",region:"美股",importance:3,
+   time:"20:30 台灣時間",prev:"年增 2.6%，核心 2.8%",forecast:"年增 2.5%，核心 2.7%",
+   note:"七月 FOMC 決策前最後一份 CPI，若大幅低於預期可能引發降息交易。",
+   link:"https://www.bls.gov/cpi/"},
+  {date:"2026-07-15",name:"台積電 Q2 法說會（預計）",type:"財報",region:"台股",importance:3,
+   time:"台灣時間約 14:00（法說）；英文同步 17:00",prev:"Q1 毛利率 58.8%；AI 相關業務成長 3 倍以上",forecast:"Q2 毛利率預計 57.5～59.5%",
+   note:"全球半導體景氣風向球。魏哲家對 CoWoS 產能與 N2 良率的說法將牽動整個供應鏈。日期以台積電官方公告為準。",
+   link:"https://investor.tsmc.com/"},
+  {date:"2026-07-15",name:"美國 6 月零售銷售",type:"經濟數據",region:"美股",importance:2,
+   time:"20:30 台灣時間",prev:"月增 +0.3%",forecast:"月增 +0.2%",
+   note:"反映美國夏季消費動能，與 CPI 同日公布，市場波動可能放大。",
+   link:"https://www.census.gov/retail/"},
+  {date:"2026-07-22",name:"FOMC 利率會議（第一天）",type:"央行",region:"全球",importance:3,
+   time:"整日",prev:"4.25～4.50%",forecast:"市場目前預期維持，但本次為降息臨界點",
+   note:"市場高度關注是否於本次或 9 月啟動降息，CME FedWatch 追蹤最新概率。",
+   link:"https://www.federalreserve.gov/"},
+  {date:"2026-07-23",name:"FOMC 利率決策 + 鮑爾記者會",type:"央行",region:"全球",importance:3,
+   time:"02:00 台灣時間（14:00 ET）發聲明；02:30 記者會",prev:"4.25～4.50%",forecast:"各方分歧：約 30% 機率降息 1 碼",
+   note:"若降息，為本輪寬鬆週期首降，歷史意義重大。若維持，鮑爾記者會措辭暗示將是市場焦點。",
+   link:"https://www.federalreserve.gov/"},
+  {date:"2026-07-25",name:"美國 Q2 GDP 初值",type:"經濟數據",region:"美股",importance:3,
+   time:"20:30 台灣時間",prev:"Q1 終值 年化 +1.3%",forecast:"Q2 初值 年化 +1.8～2.0%",
+   note:"第二季 GDP 初步估算，判斷是否真正軟著陸的關鍵數據。",
+   link:"https://www.bea.gov/"},
+  {date:"2026-07-28",name:"台積電、鴻海、聯發科 Q2 財報季開始",type:"財報",region:"台股",importance:2,
+   time:"各公司公告時間不同，法說多在 14:00",prev:"Q1 三家合計獲利年增 45%",forecast:"觀察 AI 伺服器及智慧型手機需求能見度",
+   note:"台股科技龍頭陸續公布第二季財報，法說展望通常左右後續一至兩週走勢。",
+   link:"https://mops.twse.com.tw/"},
+  // ── 八月 ──
+  {date:"2026-08-01",name:"美國 7 月非農就業報告（NFP）",type:"經濟數據",region:"美股",importance:3,
+   time:"20:30 台灣時間",prev:"新增 16.5 萬人；失業率 4.1%",forecast:"新增 15.5 萬人；失業率 4.1%",
+   note:"九月 FOMC 前關鍵數據，就業若明顯走弱，降息幾乎確定。",
+   link:"https://www.bls.gov/ces/"},
+  {date:"2026-08-05",name:"台灣 Q2 GDP 初值",type:"經濟數據",region:"台股",importance:2,
+   time:"16:00（主計總處發布）",prev:"Q1 GDP 年增 5.1%（受惠 AI 出口）",forecast:"Q2 年增 4.5～5.0%",
+   note:"主計總處公布，出口導向景氣晴雨表。近幾季台灣 GDP 持續受 AI 伺服器出口帶動。",
+   link:"https://www.stat.gov.tw/"},
+  {date:"2026-08-13",name:"美國 7 月 CPI 公布",type:"經濟數據",region:"美股",importance:3,
+   time:"20:30 台灣時間",prev:"年增 2.5%，核心 2.7%",forecast:"年增 2.4%，核心 2.6%",
+   note:"九月 FOMC 前最後一份 CPI，數據走向將基本確定降息路徑。",
+   link:"https://www.bls.gov/cpi/"},
+  {date:"2026-08-21",name:"輝達（NVDA）Q2 財報（預計）",type:"財報",region:"美股",importance:3,
+   time:"盤後約 05:30 台灣時間（17:30 ET）",prev:"Q1 營收 $44.1B；EPS $0.89；毛利率 78.4%",forecast:"Q2 營收市場預期 $48～50B",
+   note:"AI 景氣最重要指標，黃仁勳資料中心業務展望牽動全球半導體股。日期以輝達官方公告為準。",
+   link:"https://investor.nvidia.com/"},
+  {date:"2026-08-27",name:"Jackson Hole 全球央行年會",type:"央行",region:"全球",importance:3,
+   time:"鮑爾演講時間約 22:00 台灣時間（10:00 MT）",prev:"2025 年鮑爾在此宣示「時機已到」，啟動降息預期",forecast:"市場預期本次將提供 Q4 政策方向訊號",
+   note:"每年 8 月懷俄明州舉辦，全球主要央行總裁出席。鮑爾演講歷史上曾多次引發重大市場波動。",
+   link:"https://www.kansascityfed.org/jackson-hole/"},
+  // ── 九月 ──
+  {date:"2026-09-01",name:"美國 8 月 ISM 製造業 PMI",type:"經濟數據",region:"美股",importance:2,
+   time:"22:00 台灣時間",prev:"預計 8 月公布",forecast:"—",
+   note:"製造業景氣先行指標，觀察景氣是否轉折。",
+   link:"https://www.ismworld.org/"},
+  {date:"2026-09-05",name:"美國 8 月非農就業報告（NFP）",type:"經濟數據",region:"美股",importance:3,
+   time:"20:30 台灣時間",prev:"預計 8 月數據",forecast:"—",
+   note:"九月 FOMC 前最後一份非農，決定是否正式啟動本輪降息。",
+   link:"https://www.bls.gov/ces/"},
+  {date:"2026-09-10",name:"美國 8 月 CPI 公布",type:"經濟數據",region:"美股",importance:3,
+   time:"20:30 台灣時間",prev:"預計 8 月通膨數據",forecast:"—",
+   note:"九月 FOMC 前最後一份 CPI，與非農同為降息決策依據。",
+   link:"https://www.bls.gov/cpi/"},
+  {date:"2026-09-16",name:"FOMC 利率會議（第一天）",type:"央行",region:"全球",importance:3,
+   time:"整日",prev:"4.25～4.50%（或 7 月已降）",forecast:"降息 1 碼機率高，視 7 月決策結果",
+   note:"年內最受關注的其中一次 FOMC，可能是本輪降息週期正式啟動的時間點。",
+   link:"https://www.federalreserve.gov/"},
+  {date:"2026-09-17",name:"FOMC 利率決策 + 鮑爾記者會 + 點陣圖",type:"央行",region:"全球",importance:3,
+   time:"02:00 台灣時間（14:00 ET）；記者會 02:30",prev:"待觀察",forecast:"含點陣圖與 SEP，預期下調 2026～2027 年利率預測",
+   note:"本次同步公布點陣圖（dot plot），將揭示委員對 2026 年底利率終點的最新看法。",
+   link:"https://www.federalreserve.gov/"},
+  {date:"2026-09-19",name:"台灣央行理監事聯席會議（Q3）",type:"央行",region:"台股",importance:3,
+   time:"15:30（央行記者會）",prev:"維持 2.00%",forecast:"多數預期維持不變",
+   note:"第三季利率決策，若台幣持續強升，可能對外匯市場操作發表說明。",
+   link:"https://www.cbc.gov.tw/"},
+  {date:"2026-09-26",name:"美國 8 月 PCE 物價指數",type:"經濟數據",region:"美股",importance:3,
+   time:"20:30 台灣時間",prev:"整體年增 2.1%，核心 2.4%",forecast:"—",
+   note:"Fed 最偏好的通膨指標，FOMC 決策後公布，驗證路徑是否如預期降溫。",
+   link:"https://www.bea.gov/"},
+];
+
+// ===== 工具 =====
+function esc(s){return (s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+const SENT={up:{cls:'up',t:'▲ 偏多'},down:{cls:'down',t:'▼ 偏空'},neutral:{cls:'neutral',t:'● 中性'}};
+function setStatus(txt,state){document.getElementById('status').textContent=txt;
+  const d=document.getElementById('dot'); d.className='dot'+(state?(' '+state):'');}
+function nowHM(){return new Date().toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit',hour12:false});}
+
+// 來源可信度分級
+const SRC_TIER1=/(中央社|聯合報|經濟日報|工商時報|Bloomberg|Reuters|CNBC|WSJ|Financial Times)/i;
+const SRC_TIER2=/(MoneyDJ|CMoney|鉅亨網|Yahoo財經|Motley Fool|Barron|MarketWatch)/i;
+function srcClass(src){
+  if(SRC_TIER1.test(src)) return 'src-tier1';
+  if(SRC_TIER2.test(src)) return 'src-tier2';
+  return 'src-tier3';
+}
+function srcLabel(src){
+  if(SRC_TIER1.test(src)) return '★ '+src;
+  return src;
+}
+
+function cardHTML(n){
+  const s=SENT[n.sentiment]||SENT.neutral;
+  const chips=(n.tickers||[]).slice(0,4).map(x=>`<span class="chip">${esc(x)}</span>`).join('');
+  const title=n.url?`<a href="${esc(n.url)}" target="_blank" rel="noopener">${esc(n.title)}</a>`:esc(n.title);
+  const sc=srcClass(n.source||'');
+  const sl=srcLabel(n.source||'來源');
+  const meta=[`<span class="src ${sc}">${esc(sl)}</span>`];
+  if(n.time) meta.push(`<span>${esc(n.time)}</span>`);
+  return `<div class="card ${s.cls}">
+    <div class="cmeta">${meta.join('·')}<span class="sent ${s.cls}">${s.t}</span></div>
+    <div class="ctitle">${title}</div>
+    ${n.summary?`<div class="csum">${esc(n.summary)}</div>`:''}
+    ${chips?`<div class="chips">${chips}</div>`:''}
+  </div>`;
+}
+function skeleton(n){let h='';for(let i=0;i<n;i++)h+=`<div class="skel"><div class="l" style="width:40%"></div><div class="l" style="width:92%"></div><div class="l" style="width:70%"></div></div>`;return h}
+
+// ===== 即時抓取 =====
+const PROXIES=[
+  u=>`https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`,
+  u=>`https://corsproxy.io/?url=${encodeURIComponent(u)}`,
+  u=>`https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(u)}`,
+  u=>`https://thingproxy.freeboard.io/fetch/${encodeURIComponent(u)}`,
+];
+function gnews(q){return `https://news.google.com/rss/search?q=${encodeURIComponent(q)}&hl=zh-TW&gl=TW&ceid=TW:zh-Hant`;}
+async function fetchText(url){
+  let err;
+  for(const p of PROXIES){
+    try{
+      const c=new AbortController(); const t=setTimeout(()=>c.abort(),12000);
+      const r=await fetch(p(url),{signal:c.signal}); clearTimeout(t);
+      if(!r.ok) throw new Error('HTTP '+r.status);
+      const txt=await r.text();
+      if(txt && txt.length>120) return txt;
+      throw new Error('empty');
+    }catch(e){ err=e; }
+  }
+  throw err||new Error('fetch failed');
+}
+
+// 擴充情緒判斷詞庫（含台股慣用語）
+function senti(t){
+  const up=/(漲|大漲|飆|衝|創高|創新高|走高|攀|反彈|樂觀|利多|上揚|新高|爆量|軋空|主力進場|作帳行情|買超|獲利|突破|強勢|回升|surge|jump|gain|rally|rise|soar|high|beat|outperform)/i;
+  const dn=/(跌|重挫|下殺|崩|走低|賣壓|下跌|重貶|利空|摜|殺|禿鷹|倒貨|出貨|賣超|爆跌|跌停|警示|處置|停資|虧損|sell|fall|drop|plunge|slump|slide|tumble|sink|low|miss|downgrade|cut|warn)/i;
+  const u=up.test(t), d=dn.test(t);
+  return (u&&!d)?'up':(d&&!u)?'down':'neutral';
+}
+function timeAgo(s){
+  if(!s) return ''; const d=new Date(s); if(isNaN(d)) return '';
+  const m=Math.floor((Date.now()-d)/60000);
+  if(m<1) return '剛剛'; if(m<60) return m+'分鐘前';
+  const h=Math.floor(m/60); if(h<24) return h+'小時前';
+  const dd=Math.floor(h/24); if(dd<7) return dd+'天前';
+  return d.toLocaleDateString('zh-TW',{month:'numeric',day:'numeric'});
+}
+function parseRSS(text){
+  const xml=new DOMParser().parseFromString(text,"text/xml");
+  const items=[...xml.querySelectorAll("item")];
+  const seen=new Set(); const out=[];
+  for(const it of items){
+    let title=(it.querySelector("title")?.textContent||"").trim();
+    let source=(it.querySelector("source")?.textContent||"").trim();
+    if(!source && title.includes(" - ")){ const i=title.lastIndexOf(" - "); source=title.slice(i+3).trim(); title=title.slice(0,i).trim(); }
+    if(!title || seen.has(title)) continue; seen.add(title);
+    out.push({title, source, url:(it.querySelector("link")?.textContent||"").trim(),
+      time:timeAgo(it.querySelector("pubDate")?.textContent), summary:"", sentiment:senti(title), tickers:[]});
+  }
+  return out;
+}
+
+// ===== 指數行情（Yahoo Finance）=====
+const INDICES=[
+  {sym:'^TWII', nm:'加權指數', dp:0, snap:{price:23200,prev:23050}},
+  {sym:'^GSPC', nm:'S&P 500', dp:0, snap:{price:6000,prev:5975}},
+  {sym:'^IXIC', nm:'NASDAQ',  dp:0, snap:{price:19550,prev:19420}},
+  {sym:'TWD=X', nm:'美元/台幣', dp:3, snap:{price:30.55,prev:30.62}},
+  {sym:'^VIX',  nm:'VIX 波動率', dp:2, snap:{price:14.2,prev:14.8}},
+];
+let liveIndices=null;
+async function fetchQuote(sym){
+  const url=`https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(sym)}?range=1d&interval=5m&includePrePost=true`;
+  const j=JSON.parse(await fetchText(url));
+  const m=j.chart.result[0].meta;
+  const prev=(m.chartPreviousClose!=null?m.chartPreviousClose:m.previousClose);
+  return {price:m.regularMarketPrice, prev, state:m.marketState,
+          pre:m.preMarketPrice, post:m.postMarketPrice};
+}
+async function loadIndices(){
+  const results=await Promise.all(INDICES.map(async ix=>{
+    try{
+      const q=await fetchQuote(ix.sym);
+      if(q.price==null||q.prev==null) throw new Error('no data');
+      return {...ix, ...q, live:true};
+    }catch(e){
+      return {...ix, price:ix.snap.price, prev:ix.snap.prev, live:false};
+    }
+  }));
+  liveIndices=results;
+  renderTicker(results);
+  renderBanner();
+  if(document.getElementById('analysis-out').innerHTML) buildAnalysis();
+}
+function stateBadge(st){
+  if(st==='PRE'||st==='PREPRE') return {cls:'pre',t:'盤前'};
+  if(st==='REGULAR') return {cls:'open',t:'盤中'};
+  if(st==='POST'||st==='POSTPOST') return {cls:'post',t:'盤後'};
+  if(st==='CLOSED') return {cls:'',t:'收盤'};
+  return null;
+}
+function renderTicker(list){
+  const el=document.getElementById('ticker');
+  el.innerHTML=list.map(ix=>{
+    const dp=ix.dp!=null?ix.dp:2;
+    const ch=ix.price-ix.prev, pct=ix.prev?ch/ix.prev*100:0;
+    const cls=ch>0?'up':ch<0?'down':'flat';
+    const sign=ch>0?'+':'';
+    const arrow=ch>0?'▲':ch<0?'▼':'■';
+    const px=ix.price.toLocaleString('en-US',{minimumFractionDigits:dp,maximumFractionDigits:dp});
+    const b=ix.live?stateBadge(ix.state):null;
+    const badge=b?`<span class="tkst ${b.cls}">${b.t}</span>`:(ix.live?'':'<span class="tkst">快照</span>');
+    let extra='';
+    const isPre=(ix.state==='PRE'||ix.state==='PREPRE'), isPost=(ix.state==='POST'||ix.state==='POSTPOST');
+    const pp=isPre?ix.pre:isPost?ix.post:null;
+    if(ix.live && pp!=null){
+      const d=pp-ix.price, s=d>=0?'+':'';
+      extra=`<span class="tkextra">${isPre?'盤前':'盤後'} ${pp.toLocaleString('en-US',{minimumFractionDigits:dp,maximumFractionDigits:dp})}（${s}${d.toFixed(dp)}）</span>`;
+    }
+    return `<div class="tk ${cls}">
+      <div class="tknm">${esc(ix.nm)}${badge}</div>
+      <div class="tkpx">${px}</div>
+      <div class="tkch">${arrow} ${sign}${ch.toFixed(dp)}（${sign}${pct.toFixed(2)}%）</div>
+      ${extra}
+    </div>`;
+  }).join('');
+}
+
+// ===== 事件提醒橫幅 =====
+function renderBanner(){
+  const el=document.getElementById('ev-banner');
+  const soon=CAL_EVENTS.filter(e=>{
+    const cd=countdownText(e.date);
+    return e.importance>=3 && (cd.cls==='today'||cd.cls==='soon');
+  }).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,1);
+  if(!soon.length){ el.innerHTML=''; return; }
+  const e=soon[0], cd=countdownText(e.date);
+  const head=cd.cls==='today'?'今日重要事件':cd.text;
+  el.innerHTML=`<div class="evbanner">
+    <span class="eb-ico">🔔</span>
+    <div class="eb-body">
+      <div class="eb-t">${esc(head)}｜${esc(e.name)}</div>
+      <div class="eb-s">${esc(e.region||'')}${e.time?(' · '+esc(e.time)):''}${e.forecast?(' · 預期 '+esc(e.forecast)):''}</div>
+    </div>
+    <span class="eb-go" id="eb-go">查看行事曆 →</span>
+  </div>`;
+  const go=document.getElementById('eb-go');
+  if(go) go.onclick=()=>{ const t=document.querySelector('.tab[data-tab="cal"]'); if(t) t.click(); };
+}
+
+// ===== 行事曆匯出（.ics）=====
+let lastCalList=null;
+function icsEsc(s){return (s||'').replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\n/g,'\\n');}
+function icsAddDay(ymd){const d=new Date(ymd+'T00:00:00'); d.setDate(d.getDate()+1); return d.toISOString().slice(0,10).replace(/-/g,'');}
+function buildICS(events){
+  const L=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//MarketPulse//ZH-TW//','CALSCALE:GREGORIAN','METHOD:PUBLISH','X-WR-CALNAME:市場脈動 行事曆'];
+  events.forEach((e,i)=>{
+    const dt=e.date.replace(/-/g,'');
+    L.push('BEGIN:VEVENT');
+    L.push('UID:mp-'+dt+'-'+i+'@marketpulse');
+    L.push('DTSTAMP:'+new Date().toISOString().replace(/[-:]/g,'').slice(0,15)+'Z');
+    L.push('DTSTART;VALUE=DATE:'+dt);
+    L.push('DTEND;VALUE=DATE:'+icsAddDay(e.date));
+    L.push('SUMMARY:'+icsEsc('['+(e.region||'')+'] '+e.name));
+    const desc=[e.note,e.time?('時間：'+e.time):'',e.prev?('前次值：'+e.prev):'',e.forecast?('市場預期：'+e.forecast):'',e.link?('來源：'+e.link):''].filter(Boolean).join('\n');
+    if(desc) L.push('DESCRIPTION:'+icsEsc(desc));
+    L.push('END:VEVENT');
+  });
+  L.push('END:VCALENDAR');
+  return L.join('\r\n');
+}
+function downloadICS(){
+  const todayStr=new Date().toISOString().slice(0,10);
+  const list=(lastCalList&&lastCalList.length)?lastCalList:CAL_EVENTS.filter(e=>e.date>=todayStr);
+  const blob=new Blob([buildICS(list)],{type:'text/calendar;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a'); a.href=url; a.download='marketpulse-calendar.ics';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+
+// ===== 我的關注（localStorage）=====
+function loadWatch(){try{return JSON.parse(localStorage.getItem('mp_watchlist')||'[]')}catch(e){return[]}}
+function saveWatch(a){try{localStorage.setItem('mp_watchlist',JSON.stringify(a))}catch(e){}}
+function renderWatch(){
+  const box=document.getElementById('watch-box');
+  const list=loadWatch();
+  box.innerHTML=`<div class="watch">
+    <div class="wh"><h4>我的關注</h4><span class="whint">點擊查詢最新消息 · 共 ${list.length} 檔</span></div>
+    <div class="wadd"><input id="watch-input" type="text" placeholder="新增關注，例如：台積電、2330、輝達"><button id="watch-add">加入</button></div>
+    <div class="watchlist">${list.length?list.map(w=>`<span class="wchip" data-w="${esc(w)}">${esc(w)}<span class="wx" data-x="${esc(w)}">×</span></span>`).join(''):'<span class="wempty">尚未加入任何關注標的</span>'}</div>
+  </div>`;
+  const inp=document.getElementById('watch-input');
+  const add=()=>{const v=inp.value.trim(); if(!v) return; const a=loadWatch(); if(!a.includes(v)){a.push(v); saveWatch(a);} renderWatch();};
+  document.getElementById('watch-add').onclick=add;
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter')add();});
+  box.querySelectorAll('.wchip').forEach(c=>c.onclick=ev=>{
+    if(ev.target.classList.contains('wx')){
+      saveWatch(loadWatch().filter(x=>x!==ev.target.dataset.x)); renderWatch(); return;
+    }
+    document.getElementById('q').value=c.dataset.w; doSearch();
+  });
+}
+
+// ===== 恐懼貪婪指數儀表 =====
+function _fgPolar(cx,cy,r,deg){const a=deg*Math.PI/180; return [cx+r*Math.cos(a), cy-r*Math.sin(a)];}
+function _fgArc(cx,cy,r,v0,v1){
+  const [x0,y0]=_fgPolar(cx,cy,r,180-v0/100*180), [x1,y1]=_fgPolar(cx,cy,r,180-v1/100*180);
+  return `M ${x0.toFixed(1)} ${y0.toFixed(1)} A ${r} ${r} 0 0 1 ${x1.toFixed(1)} ${y1.toFixed(1)}`;
+}
+function fgLabel(v){
+  if(v<25) return {t:'極度恐慌',c:'#e8675c'};
+  if(v<45) return {t:'恐慌',c:'#e8954c'};
+  if(v<=55) return {t:'中性',c:'#e8c34c'};
+  if(v<=75) return {t:'貪婪',c:'#9cc96b'};
+  return {t:'極度貪婪',c:'#5cc98a'};
+}
+function fgGaugeHTML(v,vix){
+  const cx=130,cy=120,r=100;
+  const bands=[[0,25,'#e8675c'],[25,45,'#e8954c'],[45,55,'#e8c34c'],[55,75,'#9cc96b'],[75,100,'#5cc98a']];
+  const arcs=bands.map(b=>`<path d="${_fgArc(cx,cy,r,b[0],b[1])}" stroke="${b[2]}" stroke-width="15" fill="none"/>`).join('');
+  const [nx,ny]=_fgPolar(cx,cy,r-24,180-v/100*180);
+  const lab=fgLabel(v);
+  return `<div class="fg">
+    <div class="fg-gauge">
+      <svg viewBox="0 0 260 138" xmlns="http://www.w3.org/2000/svg">
+        ${arcs}
+        <line x1="${cx}" y1="${cy}" x2="${nx.toFixed(1)}" y2="${ny.toFixed(1)}" stroke="var(--ink)" stroke-width="3.5" stroke-linecap="round"/>
+        <circle cx="${cx}" cy="${cy}" r="7" fill="var(--ink)"/>
+      </svg>
+      <div class="fg-val" style="color:${lab.c}">${v}</div>
+      <div class="fg-lab" style="color:${lab.c}">${lab.t}</div>
+    </div>
+    <div class="fg-sub">恐懼貪婪指數 · ${vix!=null?('VIX '+vix.toFixed(2)+' ＋ 新聞情緒綜合推估'):'目前僅依新聞情緒推估（VIX 連線中）'}</div>
+  </div>`;
+}
+
+// ===== 總覽 =====
+let liveTW=null, liveUS=null;
+async function loadCol(id, query, snap, n){
+  document.getElementById(id).innerHTML=skeleton(4);
+  try{
+    const items=parseRSS(await fetchText(gnews(query))).slice(0,n);
+    if(!items.length) throw new Error('no items');
+    document.getElementById(id).innerHTML=items.map(cardHTML).join('');
+    return items;
+  }catch(e){
+    document.getElementById(id).innerHTML=snap.map(cardHTML).join('');
+    return null;
+  }
+}
+async function loadDash(){
+  setStatus('更新中…','busy');
+  document.getElementById('refresh').disabled=true;
+  loadIndices();
+  const [tw,us]=await Promise.all([
+    loadCol('tw-list','台股 OR 台積電 OR 半導體 股市', SNAP_TW, 6),
+    loadCol('us-list','美股 OR 那斯達克 OR 輝達 OR 標普', SNAP_US, 6),
+  ]);
+  liveTW=tw; liveUS=us;
+  buildDigest(); buildAnalysis();
+  const ok=tw||us;
+  if(ok) setStatus('最後更新 '+nowHM(),''); else setStatus('離線快照（即時更新失敗）','off');
+  document.getElementById('refresh').disabled=false;
+}
+document.getElementById('refresh').onclick=loadDash;
+
+// ===== 懶人包 =====
+function buildDigest(){
+  const tw=(liveTW||SNAP_TW), us=(liveUS||SNAP_US);
+  const live=!!(liveTW||liveUS);
+  const top=[...tw.slice(0,3),...us.slice(0,3)];
+  let h=`<div class="digest"><div class="dh">今日重點頭條</div>
+    <div class="dt">${live?('即時更新 · '+nowHM()):'離線快照'}</div>`;
+  top.forEach((it,i)=>{
+    const t=it.url?`<a href="${esc(it.url)}" target="_blank" rel="noopener">${esc(it.title)}</a>`:esc(it.title);
+    h+=`<div class="ditem"><div class="dnum">${String(i+1).padStart(2,'0')}</div>
+      <div class="dbody"><h4>${t}</h4><p>${esc(it.source||'')}${it.time?(' · '+esc(it.time)):''}</p></div></div>`;
+  });
+  h+='</div>';
+  document.getElementById('digest-out').innerHTML=h;
+}
+
+// ===== 搜尋 =====
+const HINTS=['台積電','輝達','半導體','Fed 利率','記憶體','鴻海','長榮','台幣匯率','建材營造','生技醫療'];
+const hintBox=document.getElementById('hints');
+hintBox.innerHTML=HINTS.map(h=>`<span class="hint">${h}</span>`).join('');
+hintBox.querySelectorAll('.hint').forEach(h=>h.onclick=()=>{document.getElementById('q').value=h.textContent;doSearch();});
+async function doSearch(){
+  const raw=document.getElementById('q').value.trim();
+  const out=document.getElementById('search-results');
+  if(!raw){out.innerHTML='<div class="empty">請輸入要查詢的關鍵字</div>';return;}
+  out.innerHTML=`<div class="loading"><div class="spin"></div><p>搜尋「${esc(raw)}」的最新消息…</p></div>`;
+  document.getElementById('go').disabled=true;
+  try{
+    const items=parseRSS(await fetchText(gnews(raw+' 股市 OR 財經'))).slice(0,12);
+    if(!items.length) throw new Error('none');
+    out.innerHTML=items.map(cardHTML).join('');
+  }catch(e){
+    const q=raw.toLowerCase();
+    const hit=[...SNAP_TW,...SNAP_US].filter(n=>(n.title+n.summary+(n.tickers||[]).join('')+n.source).toLowerCase().includes(q));
+    out.innerHTML=hit.length?('<div class="empty">即時搜尋失敗，以下為離線快照結果</div>'+hit.map(cardHTML).join(''))
+      :`<div class="empty">找不到「${esc(raw)}」相關消息，換個關鍵字或稍後再試</div>`;
+  }finally{ document.getElementById('go').disabled=false; }
+}
+document.getElementById('go').onclick=doSearch;
+document.getElementById('q').addEventListener('keydown',e=>{if(e.key==='Enter')doSearch();});
+
+// ===== 行事曆 =====
+const CAT={'財報':'amber','股東會':'green','經濟數據':'blue','央行':'red','其他':'neutral'};
+const FILTERS=['全部','經濟數據','央行','財報','股東會','台股','美股'];
+const WD=['日','一','二','三','四','五','六'];
+let calFilter='全部';
+let showPast=false;
+
+const fbox=document.getElementById('cal-filters');
+fbox.innerHTML=FILTERS.map((f,i)=>`<span class="filt ${i===0?'on':''}" data-f="${f}">${f}</span>`).join('');
+fbox.querySelectorAll('.filt').forEach(el=>el.onclick=()=>{
+  calFilter=el.dataset.f;
+  fbox.querySelectorAll('.filt').forEach(x=>x.classList.remove('on'));
+  el.classList.add('on');
+  renderCal();
+});
+
+const calToggle=document.getElementById('cal-toggle');
+calToggle.onclick=()=>{
+  showPast=!showPast;
+  calToggle.textContent=showPast?'隱藏過去事件':'顯示過去事件';
+  renderCal();
+};
+document.getElementById('cal-export').onclick=downloadICS;
+
+function countdownText(dateStr){
+  const today=new Date(); today.setHours(0,0,0,0);
+  const ev=new Date(dateStr+'T00:00:00'); ev.setHours(0,0,0,0);
+  const diff=Math.round((ev-today)/(1000*60*60*24));
+  if(diff===0) return {text:'📌 今日',cls:'today'};
+  if(diff>0 && diff<=3) return {text:`還有 ${diff} 天`,cls:'soon'};
+  if(diff>0) return {text:`還有 ${diff} 天`,cls:'future'};
+  return {text:`${Math.abs(diff)} 天前`,cls:'past'};
+}
+
+function renderCal(){
+  const out=document.getElementById('cal-out');
+  const todayStr=new Date().toISOString().slice(0,10);
+  let list=CAL_EVENTS.slice();
+
+  if(calFilter==='台股') list=list.filter(e=>e.region==='台股'||e.region==='全球');
+  else if(calFilter==='美股') list=list.filter(e=>e.region==='美股'||e.region==='全球');
+  else if(calFilter!=='全部') list=list.filter(e=>e.type===calFilter);
+
+  if(!showPast) list=list.filter(e=>e.date>=todayStr);
+  list.sort((a,b)=>a.date.localeCompare(b.date));
+  lastCalList=list;
+
+  if(!list.length){out.innerHTML='<div class="empty">此類別暫無排定事件</div>';return;}
+
+  const g={}; list.forEach(e=>{(g[e.date]=g[e.date]||[]).push(e);});
+  let h='';
+  Object.keys(g).sort().forEach(date=>{
+    const d=new Date(date+'T00:00:00'); const ok=!isNaN(d);
+    const isToday=date===todayStr;
+    const isPast=date<todayStr;
+    h+=`<div class="daygroup${isPast?' past':''}">
+      <div class="dayhead">
+        <span class="dd">${ok?d.getDate():date}</span>
+        <span class="dm">${ok?(d.getMonth()+1)+'月':''}</span>
+        <span class="dw">${ok?'週'+WD[d.getDay()]:''}</span>
+        ${isToday?'<span class="today-badge">TODAY</span>':''}
+      </div>`;
+    g[date].forEach(e=>{
+      const c=CAT[e.type]||'neutral'; const imp=Math.max(1,Math.min(3,e.importance||1));
+      let dots='';for(let i=1;i<=3;i++)dots+=`<i class="${i<=imp?'f':''}"></i>`;
+      const cd=countdownText(date);
+      const impLabel=['','低','中','高'][imp]||'';
+      const timeHtml=e.time?`<div class="ev-time"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>${esc(e.time)}</div>`:'';
+      let statsHtml='';
+      if(e.prev||e.forecast){
+        statsHtml='<div class="ev-stats">';
+        if(e.prev) statsHtml+=`<div class="ev-stat"><span class="sk">前次值</span><span class="sv">${esc(e.prev)}</span></div>`;
+        if(e.forecast) statsHtml+=`<div class="ev-stat"><span class="sk">市場預期</span><span class="sv">${esc(e.forecast)}</span></div>`;
+        statsHtml+='</div>';
+      }
+      const linkHtml=e.link?`<a class="ev-link" href="${esc(e.link)}" target="_blank" rel="noopener"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>官方來源</a>`:'';
+      h+=`<div class="ev ${c}${isToday?' today-ev':''}"><div class="bar"></div><div class="body">
+        <div class="row1"><span class="cat ${c}">${esc(e.type)}</span><span class="rflag">${esc(e.region||'')}</span><span class="rflag" title="重要性">${impLabel}</span><span class="imp">${dots}</span></div>
+        <div class="name">${esc(e.name)}</div>
+        ${e.note?`<div class="note">${esc(e.note)}</div>`:''}
+        ${timeHtml}
+        ${statsHtml}
+        ${linkHtml}
+        <div class="countdown ${cd.cls}">${cd.text}</div>
+      </div></div>`;
+    });
+    h+='</div>';
+  });
+  out.innerHTML=h;
+}
+
+// ===== 分析（市場溫度）=====
+// 情緒歷史（儲存在 localStorage，最多 14 筆）
+function saveScore(score){
+  try{
+    const key='mp_sentiment_history';
+    let arr=JSON.parse(localStorage.getItem(key)||'[]');
+    const today=new Date().toISOString().slice(0,10);
+    arr=arr.filter(x=>x.d!==today);
+    arr.push({d:today,s:score});
+    if(arr.length>14) arr=arr.slice(-14);
+    localStorage.setItem(key,JSON.stringify(arr));
+  }catch(e){}
+}
+function loadHistory(){
+  try{ return JSON.parse(localStorage.getItem('mp_sentiment_history')||'[]'); }catch(e){ return []; }
+}
+function sparklineHTML(history){
+  if(history.length<2) return '';
+  const vals=history.map(x=>x.s);
+  const min=Math.min(...vals), max=Math.max(...vals);
+  const range=max-min||1;
+  const W=400,H=48,PAD=4;
+  const pts=vals.map((v,i)=>{
+    const x=PAD+(W-PAD*2)*i/(vals.length-1);
+    const y=H-PAD-(H-PAD*2)*(v-min)/range;
+    return `${x},${y}`;
+  }).join(' ');
+  const lastScore=vals[vals.length-1];
+  const col=lastScore>=60?'var(--up)':lastScore<=40?'var(--down)':'var(--amber)';
+  const labels=history.map((x,i)=>{
+    if(i===0||i===history.length-1||i===Math.floor(history.length/2)){
+      const xp=PAD+(W-PAD*2)*i/(vals.length-1);
+      return `<text x="${xp}" y="${H}" font-size="9" fill="var(--faint)" text-anchor="middle">${x.d.slice(5)}</text>`;
+    } return '';
+  }).join('');
+  return `<div class="history-chart">
+    <div class="history-title">近 ${history.length} 天情緒走勢</div>
+    <svg class="sparkline" viewBox="0 0 ${W} ${H+12}" xmlns="http://www.w3.org/2000/svg">
+      <polyline points="${pts}" fill="none" stroke="${col}" stroke-width="2" stroke-linejoin="round"/>
+      ${history.map((x,i)=>{
+        const xp=PAD+(W-PAD*2)*i/(vals.length-1);
+        const yp=H-PAD-(H-PAD*2)*(x.s-min)/range;
+        return `<circle cx="${xp}" cy="${yp}" r="3" fill="${col}" opacity=".8"/>`;
+      }).join('')}
+      ${labels}
+    </svg>
+  </div>`;
+}
+
+// 擴充族群（加入台股本土族群）
+const SECTORS=[
+  {nm:'半導體 / 晶圓', kw:/(半導體|晶片|晶圓|台積電|聯電|力積電|日月光|chip|semiconductor|tsmc)/i},
+  {nm:'AI / 伺服器', kw:/(\bAI\b|人工智慧|伺服器|算力|GPU|輝達|nvidia|黃仁勳|博通|broadcom|超微|\bamd\b)/i},
+  {nm:'記憶體', kw:/(記憶體|dram|hbm|美光|micron|華邦電|南亞科)/i},
+  {nm:'PC / 消費電子', kw:/(\bPC\b|筆電|手機|蘋果|apple|消費電子|computex|廣達|鴻海)/i},
+  {nm:'金融 / 利率', kw:/(金融|銀行|升息|降息|利率|fed|央行|殖利率|fomc|通膨|cpi|富邦金|國泰金|玉山金)/i},
+  {nm:'建材 / 營造', kw:/(建材|營造|房市|地產|冠德|海悅|達麗|新美齊|名軒|預售|建案)/i},
+  {nm:'航運', kw:/(航運|貨櫃|長榮|陽明|萬海|遠雄港|散裝|運費|shipping)/i},
+  {nm:'傳產 / 鋼鐵', kw:/(鋼鐵|鋼材|中鋼|世紀鋼|高力|傳產|化工|石化)/i},
+  {nm:'電子零組件', kw:/(電子零組件|被動元件|電容|電阻|國巨|華新科|金像電|光群雷)/i},
+  {nm:'生技醫療', kw:/(生技|醫療|製藥|疫苗|biotech|pharma|新藥)/i},
+  {nm:'電動車 / 充電', kw:/(電動車|充電|EV|特斯拉|tesla|車用|充電樁|電池)/i},
+  {nm:'加密貨幣', kw:/(比特幣|加密|bitcoin|crypto|以太|\bbtc\b|\beth\b)/i},
+];
+
+// 擴充個股（加入台股本土個股）
+const ENTITIES=[
+  {nm:'台積電 2330', kw:/台積電|2330|tsmc/i},
+  {nm:'輝達 NVDA', kw:/輝達|nvidia|nvda|黃仁勳/i},
+  {nm:'鴻海 2317', kw:/鴻海|2317|foxconn/i},
+  {nm:'聯發科 2454', kw:/聯發科|2454|mediatek/i},
+  {nm:'長榮 2603', kw:/長榮海運|2603(?![\d])/i},
+  {nm:'陽明 2609', kw:/陽明海運|2609/i},
+  {nm:'日月光 3711', kw:/日月光|3711|ASE/i},
+  {nm:'富邦金 2881', kw:/富邦金|2881/i},
+  {nm:'國泰金 2882', kw:/國泰金|2882/i},
+  {nm:'中鋼 2002', kw:/中鋼|2002(?![\d])/i},
+  {nm:'廣達 2382', kw:/廣達|2382/i},
+  {nm:'聯電 2303', kw:/聯電|2303|umc/i},
+  {nm:'台達電 2308', kw:/台達電|2308/i},
+  {nm:'美光 MU', kw:/美光|micron|\bmu\b/i},
+  {nm:'AMD 超微', kw:/\bamd\b|超微/i},
+  {nm:'博通 AVGO', kw:/博通|broadcom|avgo/i},
+  {nm:'蘋果 AAPL', kw:/蘋果|apple|aapl/i},
+  {nm:'特斯拉 TSLA', kw:/特斯拉|tesla|tsla/i},
+  {nm:'Fed / 利率', kw:/fed|聯準會|央行|升息|降息|利率|fomc/i},
+  {nm:'記憶體 DRAM', kw:/記憶體|dram|hbm/i},
+  {nm:'台幣匯率', kw:/台幣|新台幣|匯率/i},
+];
+
+function buildAnalysis(){
+  const tw=(liveTW||SNAP_TW), us=(liveUS||SNAP_US);
+  const all=[...tw,...us];
+  const live=!!(liveTW||liveUS);
+  let up=0,down=0,neu=0;
+  all.forEach(n=>{ if(n.sentiment==='up')up++; else if(n.sentiment==='down')down++; else neu++; });
+  const total=all.length||1;
+  const score=Math.round(50+50*(up-down)/total);
+  saveScore(score);
+  const history=loadHistory();
+  // 恐懼貪婪指數：新聞情緒 ＋ VIX 綜合
+  let fgVix=null;
+  if(liveIndices){ const v=liveIndices.find(x=>x.sym==='^VIX'); if(v&&v.live) fgVix=v.price; }
+  let fgScore=score;
+  if(fgVix!=null){
+    const vixGreed=Math.max(0,Math.min(100, 100-(fgVix-10)*4)); // VIX 10→貪婪100、35→恐慌0
+    fgScore=Math.round(score*0.5+vixGreed*0.5);
+  }
+  fgScore=Math.max(0,Math.min(100,fgScore));
+  const mk=Math.max(2,Math.min(98,score));
+  let lab,cls;
+  if(score>=60){lab='偏多';cls='up';} else if(score<=40){lab='偏空';cls='down';} else {lab='中性';cls='neutral';}
+
+  let h=fgGaugeHTML(fgScore,fgVix)+`<div class="gauge-wrap">
+    <div class="gauge-top"><div class="gauge-label ${cls}">市場${lab}</div>
+      <div class="gauge-score">情緒指數 ${score} / 100 · ${live?('即時 '+nowHM()):'離線快照'}</div></div>
+    <div class="meter"><div class="mk" style="left:${mk}%"></div></div>
+    <div class="meter-scale"><span>偏空 0</span><span>中性 50</span><span>偏多 100</span></div>
+    <div class="tally"><span class="u"><b>${up}</b> 則偏多</span><span class="d"><b>${down}</b> 則偏空</span><span class="n"><b>${neu}</b> 則中性</span></div>
+    ${sparklineHTML(history)}
+  </div>`;
+
+  // 多空焦點
+  const bulls=all.filter(n=>n.sentiment==='up').slice(0,6);
+  const bears=all.filter(n=>n.sentiment==='down').slice(0,6);
+  const bbItem=n=>{
+    const sc=srcClass(n.source||'');
+    return `<a class="bbitem" href="${esc(n.url)}" target="_blank" rel="noopener">${esc(n.title)}<span class="bsrc ${sc}">${esc(srcLabel(n.source||''))}${n.time?(' · '+esc(n.time)):''}</span></a>`;
+  };
+  h+=`<div class="an-section"><div class="an-h">多空焦點 <span class="hint2">用詞偏多 / 偏空的消息</span></div>
+    <div class="bb">
+      <div class="bbcol bull"><h5>▲ 偏多消息</h5>${bulls.length?bulls.map(bbItem).join(''):'<div class="bbempty">目前無明顯偏多消息</div>'}</div>
+      <div class="bbcol bear"><h5>▼ 偏空消息</h5>${bears.length?bears.map(bbItem).join(''):'<div class="bbempty">目前無明顯偏空消息</div>'}</div>
+    </div></div>`;
+
+  // 熱門焦點（個股，可展開）
+  const ents=ENTITIES.map(e=>{
+    let u=0,d=0,c=0; const items=[];
+    all.forEach(n=>{ if(e.kw.test(n.title+' '+(n.summary||''))){ c++; items.push(n); if(n.sentiment==='up')u++; else if(n.sentiment==='down')d++; } });
+    return {nm:e.nm,u,d,c,items};
+  }).filter(e=>e.c>0).sort((a,b)=>b.c-a.c).slice(0,10);
+
+  h+=`<div class="an-section"><div class="an-h">熱門焦點 <span class="hint2">點個股可展開相關消息</span></div>`;
+  if(!ents.length) h+='<div class="empty">目前消息中未偵測到熱門個股</div>';
+  ents.forEach((e,i)=>{
+    const net=e.u-e.d; const tag=net>0?'偏多':net<0?'偏空':'中性'; const tc=net>0?'up':net<0?'down':'neutral';
+    const detailId=`ent-detail-${i}`;
+    const detail=e.items.map(n=>`<a href="${esc(n.url)}" target="_blank" rel="noopener">${esc(n.title)}<span class="ds"> · ${esc(n.source||'')}</span></a>`).join('');
+    h+=`<div class="ent" data-detail="${detailId}">
+      <span class="erank">${i+1}</span><span class="enm">${esc(e.nm)}</span>
+      <span class="ecnt">${e.c} 則</span><span class="etag ${tc}">${tag} ▾</span>
+    </div>
+    <div class="ent-detail" id="${detailId}">${detail}</div>`;
+  });
+  h+='</div>';
+
+  // 族群溫度（可展開）
+  const secs=SECTORS.map(s=>{
+    let u=0,d=0; const items=[];
+    all.forEach(n=>{ if(s.kw.test(n.title+' '+(n.summary||''))){ items.push(n); if(n.sentiment==='up')u++; else if(n.sentiment==='down')d++; } });
+    return {nm:s.nm,u,d,c:items.length,items};
+  }).filter(s=>s.c>0).sort((a,b)=>b.c-a.c);
+  h+=`<div class="an-section"><div class="an-h">族群溫度 <span class="hint2">點任一族群可展開該族群消息</span></div>`;
+  if(!secs.length) h+='<div class="empty">目前消息中未偵測到明顯族群</div>';
+  secs.forEach(s=>{
+    const net=s.u-s.d; const tag=net>0?'偏多':net<0?'偏空':'中性'; const tc=net>0?'up':net<0?'down':'neutral';
+    const pos=Math.round(s.u/s.c*100), neg=Math.round(s.d/s.c*100);
+    const detail=s.items.map(n=>`<a href="${esc(n.url)}" target="_blank" rel="noopener">${esc(n.title)} <span class="ds">${esc(n.source||'')}</span></a>`).join('');
+    h+=`<div class="sector"><div class="sh"><span class="snm">${esc(s.nm)}</span><span class="stag ${tc}">${tag}</span></div>
+      <div class="sbar"><div class="pos" style="width:${pos}%"></div><div class="neg" style="width:${neg}%"></div></div>
+      <div class="scount">${s.c} 則相關 · ${s.u} 偏多 / ${s.d} 偏空 · 點此展開 ▾</div>
+      <div class="sdetail">${detail}</div></div>`;
+  });
+  h+='</div>';
+
+  h+=`<div class="disc">※ 本分析為機械式統計近期新聞標題的用詞傾向，僅反映消息面情緒，非走勢預測，亦非投資建議。新聞為落後資訊，市場可能與標題情緒反向發展，請自行查證判斷。</div>`;
+  const out=document.getElementById('analysis-out');
+  out.innerHTML=h;
+
+  // 個股展開事件
+  out.querySelectorAll('.ent').forEach(el=>{
+    el.addEventListener('click',ev=>{
+      if(ev.target.closest('a')) return;
+      const detailEl=document.getElementById(el.dataset.detail);
+      if(!detailEl) return;
+      const isOpen=detailEl.classList.contains('open');
+      out.querySelectorAll('.ent-detail').forEach(x=>x.classList.remove('open'));
+      out.querySelectorAll('.ent').forEach(x=>x.classList.remove('open'));
+      if(!isOpen){ detailEl.classList.add('open'); el.classList.add('open'); }
+    });
+  });
+
+  // 族群展開事件
+  out.querySelectorAll('.sector').forEach(el=>el.addEventListener('click',ev=>{
+    if(ev.target.closest('a')) return;
+    el.classList.toggle('open');
+  }));
+}
+document.getElementById('refresh-an').onclick=loadDash;
+
+// ===== tabs =====
+document.querySelectorAll('.tab').forEach(t=>{
+  t.onclick=()=>{
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));
+    document.querySelectorAll('.panel').forEach(x=>x.classList.remove('on'));
+    t.classList.add('on'); document.getElementById(t.dataset.tab).classList.add('on');
+  };
+});
+
+// ===== 啟動：先畫快照 → 再嘗試即時 =====
+document.getElementById('tw-list').innerHTML=SNAP_TW.map(cardHTML).join('');
+document.getElementById('us-list').innerHTML=SNAP_US.map(cardHTML).join('');
+renderTicker(INDICES.map(ix=>({...ix, price:ix.snap.price, prev:ix.snap.prev, live:false})));
+renderWatch(); renderBanner();
+buildDigest(); renderCal(); buildAnalysis();
+loadDash();
+
+// 每 10 分鐘自動重新整理
+setInterval(()=>{ if(!document.hidden) loadDash(); }, 10*60*1000);
+// 頁面重新顯示時（從其他分頁切回）也刷新
+document.addEventListener('visibilitychange',()=>{ if(!document.hidden) loadDash(); });
+</script>
+</body>
+</html>
