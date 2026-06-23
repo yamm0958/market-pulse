@@ -553,14 +553,37 @@ const PROXIES=[
   u=>`https://corsproxy.io/?url=${encodeURIComponent(u)}`,
   u=>`https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(u)}`,
   u=>`https://thingproxy.freeboard.io/fetch/${encodeURIComponent(u)}`,
+  u=>`https://cors-proxy.fringe.zone/${u}`,
+  u=>`https://api.cors.lol/?url=${encodeURIComponent(u)}`,
 ];
 function gnews(q){return `https://news.google.com/rss/search?q=${encodeURIComponent(q)}&hl=zh-TW&gl=TW&ceid=TW:zh-Hant`;}
+
+// rss2json：把 RSS 轉成 JSON，繞過 CORS 限制（主要方案）
+async function fetchViaRss2Json(rssUrl){
+  const api=`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}&count=20`;
+  const c=new AbortController(); const t=setTimeout(()=>c.abort(),12000);
+  const r=await fetch(api,{signal:c.signal,cache:'no-store'}); clearTimeout(t);
+  if(!r.ok) throw new Error('rss2json '+r.status);
+  const j=await r.json();
+  if(j.status!=='ok'||!j.items?.length) throw new Error('rss2json empty');
+  const seen=new Set(); const out=[];
+  for(const it of j.items){
+    let title=(it.title||'').trim();
+    let source=(it.author||'').trim();
+    if(!source && title.includes(' - ')){ const i=title.lastIndexOf(' - '); source=title.slice(i+3).trim(); title=title.slice(0,i).trim(); }
+    if(!title||seen.has(title)) continue; seen.add(title);
+    out.push({title, source, url:(it.link||'').trim(),
+      time:timeAgo(it.pubDate), summary:'', sentiment:senti(title), tickers:[]});
+  }
+  return out;
+}
+
 async function fetchText(url){
   let err;
   for(const p of PROXIES){
     try{
       const c=new AbortController(); const t=setTimeout(()=>c.abort(),12000);
-      const r=await fetch(p(url),{signal:c.signal}); clearTimeout(t);
+      const r=await fetch(p(url),{signal:c.signal,cache:'no-store'}); clearTimeout(t);
       if(!r.ok) throw new Error('HTTP '+r.status);
       const txt=await r.text();
       if(txt && txt.length>120) return txt;
@@ -780,7 +803,11 @@ let liveTW=null, liveUS=null;
 async function loadCol(id, query, snap, n){
   document.getElementById(id).innerHTML=skeleton(4);
   try{
-    const items=parseRSS(await fetchText(gnews(query))).slice(0,n);
+    // 先用 rss2json（最穩定），失敗再試 CORS proxy
+    let items;
+    try{ items=await fetchViaRss2Json(gnews(query)); }
+    catch(e){ items=parseRSS(await fetchText(gnews(query))); }
+    items=items.slice(0,n);
     if(!items.length) throw new Error('no items');
     document.getElementById(id).innerHTML=items.map(cardHTML).join('');
     return items;
@@ -833,7 +860,10 @@ async function doSearch(){
   out.innerHTML=`<div class="loading"><div class="spin"></div><p>搜尋「${esc(raw)}」的最新消息…</p></div>`;
   document.getElementById('go').disabled=true;
   try{
-    const items=parseRSS(await fetchText(gnews(raw+' 股市 OR 財經'))).slice(0,12);
+    let items;
+    try{ items=await fetchViaRss2Json(gnews(raw+' 股市 OR 財經')); }
+    catch(e){ items=parseRSS(await fetchText(gnews(raw+' 股市 OR 財經'))); }
+    items=items.slice(0,12);
     if(!items.length) throw new Error('none');
     out.innerHTML=items.map(cardHTML).join('');
   }catch(e){
